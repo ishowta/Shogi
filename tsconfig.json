@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "strict": true,
+    // create()で初期化したいがエラーになってしまうので
+    "strictPropertyInitialization": false
+  },
+  "exclude": [
+    "examples"
+  ]
+}
