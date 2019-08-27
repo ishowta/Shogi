@@ -1,8 +1,8 @@
 import "phaser";
-import { MainScene } from "./src/scenes/mainScene";
+import { MainScene } from "./scenes/mainScene";
 
 // デバッグ用の将棋フレームワークのインスタンス
-import * as Shogi from "./src/library/shogi/shogi";
+import * as Shogi from "./library/shogi/shogi";
 interface MyWindow extends Window {
   shogi: Shogi.Shogi
 }
