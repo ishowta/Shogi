@@ -870,11 +870,11 @@ export class Shogi {
             case Player.Black:
                 return _isRestrictionPieceConstraits(_pos)
             case Player.White:
-                return board.applyWithReverse(() => _isRestrictionPieceConstraits(reverse(_pos)))
+                return board.applyWithReverse(() => _isRestrictionPieceConstraits(Shogi.reversePosition(_pos)))
         }
     }
-}
 
-function reverse(pos: Point): Point {
-    return { x: Board.width - 1 - pos.x, y: Board.height - 1 - pos.y }
+    static reversePosition(pos: Point): Point {
+        return { x: Board.width - 1 - pos.x, y: Board.height - 1 - pos.y }
+    }
 }
