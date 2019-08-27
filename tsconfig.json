@@ -9,5 +9,10 @@
   },
   "exclude": [
     "examples"
+  ],
+  "plugins": [
+    {
+      "name": "typescript-tslint-plugin"
+    }
   ]
 }

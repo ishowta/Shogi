@@ -9,8 +9,10 @@
     "power-assert": "^1.6.1",
     "ts-jest": "^24.0.2",
     "ts-loader": "6.0.4",
+    "tslint": "^5.19.0",
     "typedoc": "^0.15.0",
     "typescript": "3.5.2",
+    "typescript-tslint-plugin": "^0.5.4",
     "webpack": "4.35.2",
     "webpack-cli": "3.3.5",
     "webpack-dev-server": "3.7.2"
