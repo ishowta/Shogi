@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Player | shogiverse</title>
+	<title>PieceType | shogiverse</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_library_shogi_shogi_.html">&quot;library/shogi/shogi&quot;</a>
+					<a href="../modules/_library_shogi_piece_.html">&quot;library/shogi/piece&quot;</a>
 				</li>
 				<li>
-					<a href="_library_shogi_shogi_.player.html">Player</a>
+					<a href="_library_shogi_piece_.piecetype.html">PieceType</a>
 				</li>
 			</ul>
-			<h1>Enumeration Player</h1>
+			<h1>Enumeration PieceType</h1>
 		</div>
 	</div>
 </header>
@@ -72,9 +72,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>プレイヤーの区別</p>
+						<p>駒の種類</p>
 					</div>
-					<p>先行は黒番</p>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -84,8 +83,14 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_shogi_.player.html#black" class="tsd-kind-icon">Black</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_shogi_.player.html#white" class="tsd-kind-icon">White</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#bishop" class="tsd-kind-icon">Bishop</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#goldgeneral" class="tsd-kind-icon">Gold<wbr>General</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#king" class="tsd-kind-icon">King</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#knight" class="tsd-kind-icon">Knight</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#lance" class="tsd-kind-icon">Lance</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#pawn" class="tsd-kind-icon">Pawn</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#rook" class="tsd-kind-icon">Rook</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_library_shogi_piece_.piecetype.html#silvergeneral" class="tsd-kind-icon">Silver<wbr>General</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,24 +99,124 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="black" class="tsd-anchor"></a>
-					<h3>Black</h3>
-					<div class="tsd-signature tsd-kind-icon">Black<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;black&quot;</span></div>
+					<a name="bishop" class="tsd-anchor"></a>
+					<h3>Bishop</h3>
+					<div class="tsd-signature tsd-kind-icon">Bishop<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;bishop&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/65e9900/src/library/shogi/shogi.ts#L15">library/shogi/shogi.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L13">library/shogi/piece.ts:13</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>角行</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="white" class="tsd-anchor"></a>
-					<h3>White</h3>
-					<div class="tsd-signature tsd-kind-icon">White<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;white&quot;</span></div>
+					<a name="goldgeneral" class="tsd-anchor"></a>
+					<h3>Gold<wbr>General</h3>
+					<div class="tsd-signature tsd-kind-icon">Gold<wbr>General<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;gold-general&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/65e9900/src/library/shogi/shogi.ts#L16">library/shogi/shogi.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L15">library/shogi/piece.ts:15</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>金将</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="king" class="tsd-anchor"></a>
+					<h3>King</h3>
+					<div class="tsd-signature tsd-kind-icon">King<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;king&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L9">library/shogi/piece.ts:9</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>王将</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="knight" class="tsd-anchor"></a>
+					<h3>Knight</h3>
+					<div class="tsd-signature tsd-kind-icon">Knight<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;knight&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L19">library/shogi/piece.ts:19</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>桂馬</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="lance" class="tsd-anchor"></a>
+					<h3>Lance</h3>
+					<div class="tsd-signature tsd-kind-icon">Lance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;lance&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L21">library/shogi/piece.ts:21</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>香車</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="pawn" class="tsd-anchor"></a>
+					<h3>Pawn</h3>
+					<div class="tsd-signature tsd-kind-icon">Pawn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;pawn&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L23">library/shogi/piece.ts:23</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>歩兵</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="rook" class="tsd-anchor"></a>
+					<h3>Rook</h3>
+					<div class="tsd-signature tsd-kind-icon">Rook<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;rook&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L11">library/shogi/piece.ts:11</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>飛車</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="silvergeneral" class="tsd-anchor"></a>
+					<h3>Silver<wbr>General</h3>
+					<div class="tsd-signature tsd-kind-icon">Silver<wbr>General<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;silver-general&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/piece.ts#L17">library/shogi/piece.ts:17</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>銀将</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -124,7 +229,19 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_game_.html">"game"</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_library_shogi_board_.html">"library/shogi/board"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_library_shogi_errors_.html">"library/shogi/errors"</a>
+					</li>
 					<li class="current tsd-kind-external-module">
+						<a href="../modules/_library_shogi_piece_.html">"library/shogi/piece"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_library_shogi_player_.html">"library/shogi/player"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_library_shogi_shogi_.html">"library/shogi/shogi"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -137,95 +254,41 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
-						<a href="_library_shogi_shogi_.piecetype.html" class="tsd-kind-icon">Piece<wbr>Type</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-enum tsd-parent-kind-external-module">
-						<a href="_library_shogi_shogi_.player.html" class="tsd-kind-icon">Player</a>
+						<a href="_library_shogi_piece_.piecetype.html" class="tsd-kind-icon">Piece<wbr>Type</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_library_shogi_shogi_.player.html#black" class="tsd-kind-icon">Black</a>
+								<a href="_library_shogi_piece_.piecetype.html#bishop" class="tsd-kind-icon">Bishop</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_library_shogi_shogi_.player.html#white" class="tsd-kind-icon">White</a>
+								<a href="_library_shogi_piece_.piecetype.html#goldgeneral" class="tsd-kind-icon">Gold<wbr>General</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_library_shogi_piece_.piecetype.html#king" class="tsd-kind-icon">King</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_library_shogi_piece_.piecetype.html#knight" class="tsd-kind-icon">Knight</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_library_shogi_piece_.piecetype.html#lance" class="tsd-kind-icon">Lance</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_library_shogi_piece_.piecetype.html#pawn" class="tsd-kind-icon">Pawn</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_library_shogi_piece_.piecetype.html#rook" class="tsd-kind-icon">Rook</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_library_shogi_piece_.piecetype.html#silvergeneral" class="tsd-kind-icon">Silver<wbr>General</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.bitboard.html" class="tsd-kind-icon">Bit<wbr>Board</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../classes/_library_shogi_shogi_.board.html" class="tsd-kind-icon">Board</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.bounderror.html" class="tsd-kind-icon">Bound<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.cantmoveerror.html" class="tsd-kind-icon">Cant<wbr>Move<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.cantpromoteerror.html" class="tsd-kind-icon">Cant<wbr>Promote<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.doublepawnerror.html" class="tsd-kind-icon">Double<wbr>Pawn<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.duplicateerror.html" class="tsd-kind-icon">Duplicate<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.foulerror.html" class="tsd-kind-icon">Foul<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.neglectkingerror.html" class="tsd-kind-icon">Neglect<wbr>King<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.nopieceerror.html" class="tsd-kind-icon">No<wbr>Piece<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.piece.html" class="tsd-kind-icon">Piece</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.pieceboard.html" class="tsd-kind-icon">Piece<wbr>Board</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.shogi.html" class="tsd-kind-icon">Shogi</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.shogierror.html" class="tsd-kind-icon">Shogi<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.strikingerror.html" class="tsd-kind-icon">Striking<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_library_shogi_shogi_.thousanddaysfoul.html" class="tsd-kind-icon">Thousand<wbr>Days<wbr>Foul</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_library_shogi_shogi_.foul.html" class="tsd-kind-icon">Foul</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_library_shogi_shogi_.moveerror.html" class="tsd-kind-icon">Move<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_library_shogi_shogi_.movelog.html" class="tsd-kind-icon">Move<wbr>Log</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_library_shogi_shogi_.ok.html" class="tsd-kind-icon">Ok</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_library_shogi_shogi_.point.html" class="tsd-kind-icon">Point</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_library_shogi_shogi_.puterror.html" class="tsd-kind-icon">Put<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_library_shogi_shogi_.html#hand" class="tsd-kind-icon">Hand</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_library_shogi_shogi_.html#score" class="tsd-kind-icon">Score</a>
+						<a href="../classes/_library_shogi_piece_.piece.html" class="tsd-kind-icon">Piece</a>
 					</li>
 				</ul>
 			</nav>

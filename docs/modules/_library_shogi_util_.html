@@ -71,9 +71,17 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_library_shogi_util_.html#point" class="tsd-kind-icon">Point</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_library_shogi_util_.html#deepcopy" class="tsd-kind-icon">deep<wbr>Copy</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_library_shogi_util_.html#interpolation" class="tsd-kind-icon">interpolation</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_library_shogi_util_.html#interpolation2d" class="tsd-kind-icon">interpolation2D</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_library_shogi_util_.html#max" class="tsd-kind-icon">max</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_library_shogi_util_.html#min" class="tsd-kind-icon">min</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_library_shogi_util_.html#range" class="tsd-kind-icon">range</a></li>
@@ -83,10 +91,49 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="point" class="tsd-anchor"></a>
+					<h3>Point</h3>
+					<div class="tsd-signature tsd-kind-icon">Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/util.ts#L62">library/shogi/util.ts:62</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>２次元座標</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>x軸</p>
+									</div>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>y軸</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 					<a name="deepcopy" class="tsd-anchor"></a>
-					<h3>deep<wbr>Copy</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> deep<wbr>Copy</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 						<li class="tsd-signature tsd-kind-icon">deep<wbr>Copy&lt;T&gt;<span class="tsd-signature-symbol">(</span>obj<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					</ul>
@@ -94,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/65e9900/src/library/shogi/util.ts#L7">library/shogi/util.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/util.ts#L8">library/shogi/util.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -114,7 +161,9 @@
 								<li>
 									<h5>obj: <span class="tsd-signature-type">T</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>オブジェクト</p>
+										<div class="lead">
+											<p>オブジェクト</p>
+										</div>
 									</div>
 								</li>
 							</ul>
@@ -123,8 +172,70 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="interpolation" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> interpolation</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">interpolation<span class="tsd-signature-symbol">(</span>c<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span>, d<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/util.ts#L70">library/shogi/util.ts:70</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>aとbの間にある座標のリストを返す（aやbは含まない）</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>c: <span class="tsd-signature-type">integer</span></h5>
+								</li>
+								<li>
+									<h5>d: <span class="tsd-signature-type">integer</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="interpolation2d" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> interpolation2D</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">interpolation2D<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="_library_shogi_util_.html#point" class="tsd-signature-type">Point</a>, b<span class="tsd-signature-symbol">: </span><a href="_library_shogi_util_.html#point" class="tsd-signature-type">Point</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_library_shogi_util_.html#point" class="tsd-signature-type">Point</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/util.ts#L74">library/shogi/util.ts:74</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>aとbの間にある座標のリストを返す（８方向のみで、aやbは含まない）</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="_library_shogi_util_.html#point" class="tsd-signature-type">Point</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="_library_shogi_util_.html#point" class="tsd-signature-type">Point</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_library_shogi_util_.html#point" class="tsd-signature-type">Point</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="max" class="tsd-anchor"></a>
-					<h3>max</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> max</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
 						<li class="tsd-signature tsd-kind-icon">max<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
@@ -132,7 +243,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/65e9900/src/library/shogi/util.ts#L59">library/shogi/util.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/util.ts#L59">library/shogi/util.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -155,7 +266,7 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="min" class="tsd-anchor"></a>
-					<h3>min</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> min</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
 						<li class="tsd-signature tsd-kind-icon">min<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
@@ -163,7 +274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/65e9900/src/library/shogi/util.ts#L56">library/shogi/util.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/util.ts#L56">library/shogi/util.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -186,15 +297,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="range" class="tsd-anchor"></a>
-					<h3>range</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> range</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span>, end<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span>, end<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/65e9900/src/library/shogi/util.ts#L51">library/shogi/util.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/kinironote/Shogiverse/blob/4d767ae/src/library/shogi/util.ts#L52">library/shogi/util.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -208,17 +319,21 @@
 								<li>
 									<h5>start: <span class="tsd-signature-type">integer</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>左端</p>
+										<div class="lead">
+											<p>左端</p>
+										</div>
 									</div>
 								</li>
 								<li>
 									<h5>end: <span class="tsd-signature-type">integer</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>右端</p>
+										<div class="lead">
+											<p>右端</p>
+										</div>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">integer</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -234,6 +349,18 @@
 						<a href="_game_.html">"game"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="_library_shogi_board_.html">"library/shogi/board"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_library_shogi_errors_.html">"library/shogi/errors"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_library_shogi_piece_.html">"library/shogi/piece"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_library_shogi_player_.html">"library/shogi/player"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="_library_shogi_shogi_.html">"library/shogi/shogi"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
@@ -246,8 +373,17 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_library_shogi_util_.html#point" class="tsd-kind-icon">Point</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_library_shogi_util_.html#deepcopy" class="tsd-kind-icon">deep<wbr>Copy</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_library_shogi_util_.html#interpolation" class="tsd-kind-icon">interpolation</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_library_shogi_util_.html#interpolation2d" class="tsd-kind-icon">interpolation2D</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_library_shogi_util_.html#max" class="tsd-kind-icon">max</a>
