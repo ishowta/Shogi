@@ -442,6 +442,11 @@ export class Shogi {
         return { type: "ok" }
     }
 
+    /** 将棋の正しい座標 -> フレームワーク内の座標 */
+    static c(x: integer, y: integer) {
+        return { x: Board.width - x, y: y - 1 }
+    }
+
     /** 駒を進める */
     move(from: Point, to: Point, doPromote: boolean = false, skipFoul: boolean = false): Ok | MoveError {
         const canMove = this.checkCanMove(from, to, doPromote, skipFoul)

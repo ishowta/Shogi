@@ -264,4 +264,270 @@ PieceBoard [
 ]
 `;
 
-exports[`将棋盤を表示できるか 1`] = `"(香)(桂)(銀)(金)(玉)(金)(銀)(桂)(香) 　 (飛) 　  　  　  　  　 (角) 　 (歩)(歩)(歩)(歩)(歩)(歩)(歩)(歩)(歩) 　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  歩  歩  歩  歩  歩  歩  歩  歩  歩  　  角  　  　  　  　  　  飛  　  香  桂  銀  金  王  金  銀  桂  香 "`;
+exports[`将棋盤を文字列に変換・逆変換できるか 1`] = `"1,,,610-510-410-310-010-310-410-510-610,_-110-_-200-_-_-_-201-_,710-_-710-710-710-710-_-710-710,_-710-_-_-_-_-710-_-_,_-_-_-_-_-_-_-_-_,_-_-700-_-_-_-_-_-_,700-700-_-700-700-700-700-700-700,_-_-_-_-_-_-_-100-_,600-500-400-300-000-300-400-500-600"`;
+
+exports[`将棋盤を表示できるか 1`] = `"(香)(桂)(銀)(金)(玉)(金)(銀)(桂)(香) 　 (飛) 　  角  　  　  　  馬  　 (歩) 　 (歩)(歩)(歩)(歩) 　 (歩)(歩) 　 (歩) 　  　  　  　 (歩) 　  　  　  　  　  　  　  　  　  　  　  　  　  歩  　  　  　  　  　  　  歩  歩  　  歩  歩  歩  歩  歩  歩  　  　  　  　  　  　  　  飛  　  香  桂  銀  金  王  金  銀  桂  香 "`;
+
+exports[`正しく駒を動かせているか 1`] = `
+PieceBoard [
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 6,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 0,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 6,
+    },
+  ],
+  Array [
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 1,
+    },
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 2,
+    },
+    null,
+    null,
+    null,
+    Piece {
+      "isPromote": true,
+      "owner": "black",
+      "type": 2,
+    },
+    null,
+  ],
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+  ],
+  Array [
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    null,
+    null,
+    null,
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 1,
+    },
+    null,
+  ],
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 6,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 0,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 6,
+    },
+  ],
+]
+`;

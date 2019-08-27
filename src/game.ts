@@ -5,9 +5,11 @@ import { MainScene } from "./scenes/mainScene";
 import * as Shogi from "./library/shogi/shogi";
 interface MyWindow extends Window {
   shogi: Shogi.Shogi
+  c: any
 }
 declare var window: MyWindow;
 window.shogi = new Shogi.Shogi();
+window.c = Shogi.Shogi.c
 
 // main game configuration
 const config: Phaser.Types.Core.GameConfig = {
