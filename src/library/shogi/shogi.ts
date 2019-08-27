@@ -332,7 +332,6 @@ export class Shogi {
                                 return loggedWithOwnerMark(piece.owner, piece.isPromote ? "？" : "金")
                             case PieceType.King:
                                 return loggedWithOwnerMark(piece.owner, piece.isPromote ? "？" : piece.owner === Player.Black ? "王" : "玉")
-                                break
                             case PieceType.Knight:
                                 return loggedWithOwnerMark(piece.owner, piece.isPromote ? "金" : "桂")
                             case PieceType.Lance:
