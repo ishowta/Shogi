@@ -1,6 +1,14 @@
 import "phaser";
 import { MainScene } from "./src/scenes/mainScene";
 
+// デバッグ用の将棋フレームワークのインスタンス
+import * as Shogi from "./src/library/shogi/shogi";
+interface MyWindow extends Window {
+  shogi: Shogi.Shogi
+}
+declare var window: MyWindow;
+window.shogi = new Shogi.Shogi();
+
 // main game configuration
 const config: Phaser.Types.Core.GameConfig = {
   width: 800,
