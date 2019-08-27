@@ -5,6 +5,7 @@
     "@types/power-assert": "^1.5.0",
     "espower-typescript": "^9.0.2",
     "expose-loader": "0.7.5",
+    "husky": "^3.0.4",
     "jest": "^24.9.0",
     "power-assert": "^1.6.1",
     "ts-jest": "^24.0.2",
@@ -25,11 +26,12 @@
     "build": "webpack --mode development",
     "test": "jest --ci",
     "coverage": "jest --coverage && sleep 3 && open file://$(pwd)/coverage/lcov-report/index.html",
-    "doc": "typedoc --out docs/ src/ && sleep 3 && open file://$(pwd)/docs/index.html"
+    "makeDoc": "typedoc --out docs/ src/ && cp config/.nojekyll docs/ && cp config/config.yml docs/",
+    "doc": "yarn run makeDoc && sleep 3 && open file://$(pwd)/docs/index.html"
   },
   "jest": {
     "transform": {
-      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/tests/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
     "moduleFileExtensions": [
@@ -39,5 +41,10 @@
       "json",
       "jsx"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run test"
+    }
   }
 }
