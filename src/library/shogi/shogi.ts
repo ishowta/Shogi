@@ -112,9 +112,9 @@ export class Piece {
         this.isPromote = false
     }
 
-    /** 進化できるか */
-    canPromote(): boolean {
-        switch (this.type) {
+    /** 進化できる種類の駒か */
+    static canPromote(type: PieceType): boolean {
+        switch (type) {
             case PieceType.King: return false
             case PieceType.Rook: return true
             case PieceType.Bishop: return true
@@ -422,7 +422,7 @@ export class Shogi {
         // 既に成っているのに成ろうとしている
         if (movedPiece.isPromote && doPromote) { return { type: "move_error", reason: new CantPromoteError() } }
         // 成ることのできない駒なのに成ろうとしている
-        else if (doPromote && !movedPiece.canPromote()) { return { type: "move_error", reason: new CantPromoteError() } }
+        else if (doPromote && !Piece.canPromote(movedPiece.type)) { return { type: "move_error", reason: new CantPromoteError() } }
 
         if (!skipFoul) {
             /// 反則
