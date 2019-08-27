@@ -23,7 +23,7 @@
   "scripts": {
     "dev": "webpack --mode development && webpack-dev-server --mode development",
     "build": "webpack --mode development",
-    "test": "jest",
+    "test": "jest --ci",
     "coverage": "jest --coverage && sleep 3 && open file://$(pwd)/coverage/lcov-report/index.html"
   },
   "jest": {
