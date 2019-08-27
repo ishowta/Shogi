@@ -742,8 +742,10 @@ export class Shogi {
 
     /** 千日手チェック */
     checkThousandDays(): boolean {
+        if (this.score.length < 4) return false
         const currentId = this.score[this.score.length - 1].id
-        const duplicateWithCurrentIdCount = this.score.slice(0, this.score.length - 1).reduce((cnt, score) => {
+        // 最後の手と同じ手がいくつあるか（最後の手も数える）
+        const duplicateWithCurrentIdCount = this.score.slice(0, this.score.length).reduce((cnt, score) => {
             const id = score.id
             return cnt + (id === currentId ? 1 : 0)
         }, 0)
