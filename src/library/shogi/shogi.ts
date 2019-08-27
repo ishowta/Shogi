@@ -682,26 +682,26 @@ export class Shogi {
                         throw new ShogiError("")
                     }
                 case PieceType.Bishop:
-                    if (from.x === to.x && from.y === to.y) return false
+                    if (from.x === to.x || from.y === to.y) return false
                     else if (from.x < to.x && from.y < to.y) {
                         // 左上 -> 右下
                         const dif = to.x - from.x
-                        return Util.range(1, dif - 1 - 1).some(n => this.board[from.y + n][from.x + n] !== null)
+                        return Util.range(1, dif - 1).some(n => this.board[from.y + n][from.x + n] !== null)
                     }
                     else if (from.x < to.x && from.y > to.y) {
                         // 左下 -> 右上
                         const dif = to.x - from.x
-                        return Util.range(1, dif - 1 - 1).some(n => this.board[from.y - n][from.x + n] !== null)
+                        return Util.range(1, dif - 1).some(n => this.board[from.y - n][from.x + n] !== null)
                     }
                     else if (from.x > to.x && from.y < to.y) {
                         // 右上 -> 左下
                         const dif = from.x - to.x
-                        return Util.range(1, dif - 1 - 1).some(n => this.board[from.y + n][from.x - n] !== null)
+                        return Util.range(1, dif - 1).some(n => this.board[from.y + n][from.x - n] !== null)
                     }
                     else if (from.x > to.x && from.y > to.y) {
                         // 右下 -> 左上
                         const dif = from.x - to.x
-                        return Util.range(1, dif - 1 - 1).some(n => this.board[from.y - n][from.x - n] !== null)
+                        return Util.range(1, dif - 1).some(n => this.board[from.y - n][from.x - n] !== null)
                     } else {
                         throw new ShogiError("")
                     }
