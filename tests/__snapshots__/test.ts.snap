@@ -1,0 +1,267 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`将棋盤が初期化されているか 1`] = `
+PieceBoard [
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 6,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 0,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 6,
+    },
+  ],
+  Array [
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 1,
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 2,
+    },
+    null,
+  ],
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "white",
+      "type": 7,
+    },
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 7,
+    },
+  ],
+  Array [
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 2,
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 1,
+    },
+    null,
+  ],
+  Array [
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 6,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 0,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 3,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 4,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 5,
+    },
+    Piece {
+      "isPromote": false,
+      "owner": "black",
+      "type": 6,
+    },
+  ],
+]
+`;
+
+exports[`将棋盤を表示できるか 1`] = `"(香)(桂)(銀)(金)(玉)(金)(銀)(桂)(香) 　 (飛) 　  　  　  　  　 (角) 　 (歩)(歩)(歩)(歩)(歩)(歩)(歩)(歩)(歩) 　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  　  歩  歩  歩  歩  歩  歩  歩  歩  歩  　  角  　  　  　  　  　  飛  　  香  桂  銀  金  王  金  銀  桂  香 "`;
