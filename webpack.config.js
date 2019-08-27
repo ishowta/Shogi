@@ -5,7 +5,7 @@ var phaser = path.join(pathToPhaser, 'dist/phaser.js');
 module.exports = {
   entry: {
     "shogiverse": './src/game.ts',
-    "test": './test/test.ts'
+    "test": './tests/test.ts'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
