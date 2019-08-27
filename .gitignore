@@ -6,8 +6,15 @@ bower_components
 .DS_Store
 Thumbs.db
 
+# ignore temporary file
+*.swp
+*.log
+
 # Ignore built ts files
 dist/**/*
 
 # ignore yarn.lock
 yarn.lock
+
+# ignore test output
+coverage/**/*

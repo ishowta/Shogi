@@ -3,10 +3,13 @@ var pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 var phaser = path.join(pathToPhaser, 'dist/phaser.js');
 
 module.exports = {
-  entry: './src/game.ts',
+  entry: {
+    "shogiverse": './src/game.ts',
+    "test": './test/test.ts'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
   },
   module: {
     rules: [
@@ -26,5 +29,6 @@ module.exports = {
     alias: {
       phaser: phaser
     }
-  }
+  },
+  devtool: 'inline-source-map'
 };
