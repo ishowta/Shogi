@@ -4,7 +4,7 @@ export class ShogiError implements Error {
     /** エラーメッセージ */
     public message: string
     /** エラー名 */
-    public name: string = "ShogiError";
+    public name: string = "ShogiError"
 
     public constructor(message: string = "") {
         this.message = message

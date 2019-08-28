@@ -37,6 +37,7 @@
     "client": "webpack --mode development && webpack-dev-server --mode development",
     "server": "ts-node src/server/index.ts",
     "build": "webpack --mode development",
+    "lint": "yarn run tslint --project tsconfig.json 'src/**/*.ts'",
     "test": "jest --ci",
     "coverage": "jest --coverage && sleep 3 && open file://$(pwd)/coverage/lcov-report/index.html",
     "makeDoc": "typedoc --out docs/ src/ && cp config/.nojekyll docs/ && cp config/config.yml docs/",
@@ -57,7 +58,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run test"
+      "pre-commit": "yarn run lint && yarn run test"
     }
   }
 }
