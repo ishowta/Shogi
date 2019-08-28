@@ -58,12 +58,12 @@ class PieceSprite extends Phaser.GameObjects.Sprite {
 type PieceAndPieceSpriteLinker = Array<[Piece, PieceSprite]>
 
 const getPiece = (linker: PieceAndPieceSpriteLinker, sprite: PieceSprite): Piece | null => {
-  const link = linker.find(([_, s]) => Object.is(s, sprite))
+  const link = linker.find(([_, s]) => isSameInstance(s, sprite))
   return link === undefined ? null : link[0]
 }
 
 const getSprite = (linker: PieceAndPieceSpriteLinker, piece: Piece): Sprite | null => {
-  const link = linker.find(([p, _]) => Object.is(p, piece))
+  const link = linker.find(([p, _]) => isSameInstance(p, piece))
   return link === undefined ? null : link[1]
 }
 
@@ -146,7 +146,7 @@ export class MainScene extends Phaser.Scene {
           y: Math.round(gameObject.y / CELL_SIZE)
         }
         const existsPieceInBoard = this.shogi.getPosition(gameObject.piece) !== null
-        const existsPieceInHand = this.shogi.hand[this.shogi.turnPlayer].some(p => Object.is(p, gameObject.piece))
+        const existsPieceInHand = this.shogi.hand[this.shogi.turnPlayer].some(p => isSameInstance(p, gameObject.piece))
         const takedPiece = this.shogi.board.at(to)
 
         if (existsPieceInBoard) {

@@ -3,7 +3,7 @@ import { BitBoard, Board, PieceBoard } from "./board";
 import { BoundError, CantMoveError, CantPromoteError, DoublePawnFoul, DuplicateError, FoulError, MoveError, NeglectKingFoul , NoPieceError, NotOwnedPieceError, ShogiError, StrikingFoul, ThousandDaysFoul } from "./errors"
 import { Piece, PieceType } from "./piece"
 import { Player } from "./player";
-import { deepCopy, interpolation, interpolation2D, max, min, Point, range } from "./util"
+import { deepCopy, interpolation, interpolation2D, isSameInstance, max, min, Point, range } from "./util"
 
 /** OK */
 export type Ok = {
@@ -144,7 +144,7 @@ export class Shogi {
             this.board.assign(pos, piece)
 
             // 持ち駒から取り除く
-            this.hand[this.turnPlayer] = this.hand[this.turnPlayer].filter(p => !Object.is(p, piece))
+            this.hand[this.turnPlayer] = this.hand[this.turnPlayer].filter(p => !isSameInstance(p, piece))
 
             // 棋譜に書き込む
             this.score.push({
@@ -585,7 +585,7 @@ export class Shogi {
 
     /** 駒pieceの将棋盤における位置を得る */
     public getPosition(piece: Piece): Point | null {
-        return this.board.matFindIndex(p => Object.is(p, piece))
+        return this.board.matFindIndex(p => isSameInstance(p, piece))
     }
 
     /** 将棋の正しい座標 -> フレームワーク内の座標 */

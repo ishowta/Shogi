@@ -76,3 +76,6 @@ export const interpolation2D = (a: Point, b: Point): Point[] => {
     const rangeY: integer[] = a.y < b.y ? interpolation(a.y, b.y) : interpolation(a.y, b.y).reverse()
     return rangeX.map<Point>((_, i) => ({x: rangeX[i], y: rangeY[i]}))
 }
+
+/** Syntax sugar of a === b */
+export const isSameInstance = <T>(a: T, b: T): boolean => Object.is(a, b)
