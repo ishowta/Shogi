@@ -1,7 +1,7 @@
 import { Room, Client } from "colyseus"
 import { Schema, type, MapSchema } from "@colyseus/schema"
 import { Message } from "../messageTypes"
-import * as Scheme from "./schemes"
+import * as Scheme from "../schemes"
 
 export class MyRoom extends Room {
   maxClients = 2
