@@ -1,7 +1,7 @@
 // tslint:disable-next-line:no-implicit-dependencies
 import * as assert from "power-assert"
 
-import { CantPromoteError, NeglectKingFoul, NoPieceError, StrikingFoul } from "../src/library/shogi/errors";
+import { CantPromoteError, NeglectKingFoul, NoPieceError, StrikingFoul, NotOwnedPieceError } from "../src/library/shogi/errors";
 import { Piece } from "../src/library/shogi/piece";
 import { Player } from "../src/library/shogi/player";
 import { Hand, MoveNotAllowedError, Ok, PlacementNotAllowedError, Shogi } from "../src/library/shogi/shogi"
@@ -73,7 +73,7 @@ it("成れるか", () => {
 
 it("相手の駒は動かせない", () => {
     const res: Ok | MoveNotAllowedError = shogi.move(c(9, 1), c(9, 2))
-    assert(res.type === "move_error" && res.reason instanceof NoPieceError)
+    assert(res.type === "move_error" && res.reason instanceof NotOwnedPieceError)
 })
 
 it("既に成っているのに成ろうとする", () => {
