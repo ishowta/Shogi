@@ -1,17 +1,17 @@
 // tslint:disable-next-line:no-implicit-dependencies
-import * as assert from "power-assert"
+import assert from "power-assert"
 
-import { CantPromoteError, NeglectKingFoul, NoPieceError, StrikingFoul, NotOwnedPieceError } from "../src/library/shogi/errors";
-import { Piece } from "../src/library/shogi/piece";
-import { Player } from "../src/library/shogi/player";
+import { CantPromoteError, NeglectKingFoul, NoPieceError, StrikingFoul, NotOwnedPieceError } from "../src/library/shogi/errors"
+import { Piece } from "../src/library/shogi/piece"
+import { Player } from "../src/library/shogi/player"
 import { Hand, MoveNotAllowedError, Ok, PlacementNotAllowedError, Shogi } from "../src/library/shogi/shogi"
 import { Point, range } from "../src/library/shogi/util"
 
 const snap = <T>(obj: T, name?: string) => expect(obj).toMatchSnapshot(name)
 const readConsoleOutput = (fn: () => void): string => {
     let output: string = ""
-    const storeLog = (inputs: string) => (output += inputs);
-    console.log = jest.fn(storeLog);
+    const storeLog = (inputs: string) => (output += inputs)
+    console.log = jest.fn(storeLog)
     fn()
     return output
 }
@@ -35,7 +35,7 @@ beforeEach(() => {
 
 it("インスタンスを作れるか", () => {
     assert(shogi instanceof Shogi)
-});
+})
 
 it("将棋盤が初期化されているか", () => {
     snap(shogi.board)
