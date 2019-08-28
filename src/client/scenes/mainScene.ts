@@ -12,11 +12,9 @@ type Sprite = Phaser.GameObjects.Sprite
 type Container = Phaser.GameObjects.Container
 
 class PieceSprite extends Phaser.GameObjects.Sprite {
-  public readonly piece: Piece
   public currentBoardPosition: Point
 
   public constructor(
-    piece: Piece,
     scene: Phaser.Scene,
     x: number,
     y: number,
@@ -24,7 +22,6 @@ class PieceSprite extends Phaser.GameObjects.Sprite {
     frame?: string | number | undefined
   ) {
     super(scene, x, y, texture, frame)
-    this.piece = piece
     this.currentBoardPosition = {x, y}
   }
 
@@ -37,9 +34,9 @@ class PieceSprite extends Phaser.GameObjects.Sprite {
     this.setPosition(this.currentBoardPosition.x, this.currentBoardPosition.y)
   }
 
-  public moveToHand(index: integer): void {
+  public moveToHand(index: integer, player: Player): void {
     this.angle += 180
-    switch (this.piece.owner) {
+    switch (player) {
       case Player.Black:
         this.setNewBoardPosition({
           x: CELL_SIZE * (8 + index + 2),
@@ -110,7 +107,6 @@ export class MainScene extends Phaser.Scene {
     this.shogi.board.matForEach((piece, pos) => {
       if (piece !== null) {
         const sprite = new PieceSprite(
-          piece,
           this,
           pos.x * CELL_SIZE,
           pos.y * CELL_SIZE,
@@ -149,13 +145,14 @@ export class MainScene extends Phaser.Scene {
           x: Math.round(gameObject.x / CELL_SIZE),
           y: Math.round(gameObject.y / CELL_SIZE)
         }
-        const existsPieceInBoard = this.shogi.getPosition(gameObject.piece) !== null
-        const existsPieceInHand = this.shogi.hand[this.shogi.turnPlayer].some(p => isSameInstance(p, gameObject.piece))
+        const gameObjectPiece = getPiece(this.linker, gameObject) as Piece
+        const existsPieceInBoard = this.shogi.getPosition(gameObjectPiece) !== null
+        const existsPieceInHand = this.shogi.hand[this.shogi.turnPlayer].some(p => isSameInstance(p, gameObjectPiece))
         const takedPiece = this.shogi.board.at(to)
 
         if (existsPieceInBoard) {
           // move
-          const piecePos = this.shogi.getPosition(gameObject.piece) as Point
+          const piecePos = this.shogi.getPosition(gameObjectPiece) as Point
           const res = this.shogi.move(piecePos, to)
           if (res.type === "move_error") {
             console.log("Move error: ", res)
@@ -172,8 +169,8 @@ export class MainScene extends Phaser.Scene {
 
         } else if (existsPieceInHand) {
           // put
-          const handIndex = this.shogi.hand[this.shogi.turnPlayer].findIndex(p => isSameInstance(p, gameObject.piece))
-          const res = this.shogi.placeHandPiece(gameObject.piece, to)
+          const handIndex = this.shogi.hand[this.shogi.turnPlayer].findIndex(p => isSameInstance(p, gameObjectPiece))
+          const res = this.shogi.placeHandPiece(gameObjectPiece, to)
           if (res.type === "put_error") {
             console.log("Place error: ", res)
             gameObject.resetByBoardPosition()
@@ -192,10 +189,10 @@ export class MainScene extends Phaser.Scene {
 
         // とった駒があれば持ち駒置き場に移動する
         if (takedPiece !== null) {
-          const handIndex = this.shogi.hand[gameObject.piece.owner].length - 1 // この時点で既にshogi内の持ち駒は増えているので-1
+          const handIndex = this.shogi.hand[gameObjectPiece.owner].length - 1 // この時点で既にshogi内の持ち駒は増えているので-1
           const takedPieceSprite = getSprite(this.linker, takedPiece) as PieceSprite
           console.log(this.linker, takedPiece)
-          takedPieceSprite.moveToHand(handIndex)
+          takedPieceSprite.moveToHand(handIndex, gameObjectPiece.owner)
         }
 
         // 駒を移動
@@ -227,7 +224,7 @@ export class MainScene extends Phaser.Scene {
               const handIndex = this.shogi.hand[movedPiece.owner].length - 1
               const takedPieceSprite = getSprite(this.linker, takedPiece) as PieceSprite
               console.log(this.linker, takedPiece)
-              takedPieceSprite.moveToHand(handIndex)
+              takedPieceSprite.moveToHand(handIndex, movedPiece.owner)
             }
 
             // 駒を移動
