@@ -17,7 +17,6 @@
             "object-destructuring",
             "array-destructuring"
         ],
-        "prefer-function-over-method": false,
-        "member-access": false
+        "prefer-function-over-method": false
     }
 }

@@ -6,7 +6,7 @@ export type MoveMessage = {
     type: "move"
     from: Point
     to: Point
-    isPromotion: boolean
+    doPromote: boolean
 }
 
 export type PlaceMessage = {

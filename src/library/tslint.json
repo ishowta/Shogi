@@ -22,7 +22,7 @@
         ],
         "prefer-readonly":false,
         "newline-before-return": false,
-        "no-magic-numbers": false, // Want to true in game file
+        "no-magic-numbers": false,
         "no-null-keyword": false,
         "no-console": false,
         "align": false,

@@ -20,7 +20,6 @@
         "completed-docs":false,
         "comment-format":false,
         "binary-expression-operand-order":false,
-        "switch-final-break":false,
         "no-empty": false,
         "member-access":false
     }

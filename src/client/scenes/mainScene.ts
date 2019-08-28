@@ -8,64 +8,37 @@ import { isSameInstance, Point } from "../../library/shogi/util"
 import { Shogiverse } from "../game"
 import { Message, MoveMessage } from "../../messageTypes"
 import * as Scheme from "../../schemes"
+import { Scene } from "phaser"
 
 type Sprite = Phaser.GameObjects.Sprite
 type Container = Phaser.GameObjects.Container
 
 class PieceSprite extends Phaser.GameObjects.Sprite {
-  public currentBoardPosition: Point
-
-  public constructor(
-    scene: Phaser.Scene,
-    x: number,
-    y: number,
-    texture: string,
-    frame?: string | number | undefined
-  ) {
-    super(scene, x, y, texture, frame)
-    this.currentBoardPosition = {x, y}
+  public constructor(scene: Scene, piece: Piece, x: integer, y: integer) {
+    super(
+      scene,
+      x,
+      y,
+      piece.type
+      + (piece.isPromote ? "+" : "")
+      + (piece.type === PieceType.King && piece.owner === Player.White ? "*" : "")
+    )
+    this.displayHeight = PIECE_SIZE
+    this.displayWidth = PIECE_SIZE * (this.width / this.height)
+    if (piece.owner === Player.White) { this.turnPiece() }
   }
 
-  public setNewBoardPosition(newPos: Point): void {
-    this.setPosition(newPos.x, newPos.y)
-    this.currentBoardPosition = {x: newPos.x, y: newPos.y}
+  public setPos(pos: Point): void {
+    this.setPosition(pos.x, pos.y)
   }
 
-  public resetByBoardPosition(): void {
-    this.setPosition(this.currentBoardPosition.x, this.currentBoardPosition.y)
-  }
-
-  public moveToHand(index: integer, player: Player): void {
+  public turnPiece(): void {
     this.angle += 180
-    switch (player) {
-      case Player.Black:
-        this.setNewBoardPosition({
-          x: CELL_SIZE * (8 + index + 2),
-          y: CELL_SIZE * 8
-        })
-        break
-      case Player.White:
-        this.setNewBoardPosition({
-          x: CELL_SIZE * (0 - index - 2),
-          y: 0
-        })
-        break
-    }
-    return
   }
 }
 
+/** ライブラリのpieceとゲームのpieceSpriteを相互参照する用のリンク */
 type PieceAndPieceSpriteLinker = Array<[Piece, PieceSprite]>
-
-const getPiece = (linker: PieceAndPieceSpriteLinker, sprite: PieceSprite): Piece | null => {
-  const link = linker.find(([_, s]) => isSameInstance(s, sprite))
-  return link === undefined ? null : link[0]
-}
-
-const getSprite = (linker: PieceAndPieceSpriteLinker, piece: Piece): Sprite | null => {
-  const link = linker.find(([p, _]) => isSameInstance(p, piece))
-  return link === undefined ? null : link[1]
-}
 
 /**
  * 将棋対戦画面
@@ -76,6 +49,8 @@ export class MainScene extends Phaser.Scene {
   private background: Sprite
   private linker: PieceAndPieceSpriteLinker = []
   private g: Shogiverse
+  private dragStartPosition: Point | null
+  private player: Player
 
   public constructor() {
     super({key: "MainScene"})
@@ -101,31 +76,135 @@ export class MainScene extends Phaser.Scene {
     this.load.image(`${PieceType.Pawn}+`, "../../assets/image/syougi15_tokin.png")
   }
 
+  private static getHandPosition(player: Player, handIndex: integer): Point {
+    switch (player) {
+      case Player.Black:
+        return {x: CELL_SIZE * (8 + handIndex + 2), y: CELL_SIZE * 8}
+      case Player.White:
+        return {x: CELL_SIZE * (0 - handIndex - 2), y: 0}
+    }
+  }
+
+  private getPiece(sprite: PieceSprite): Piece | null {
+    const link = this.linker.find(([_, s]) => isSameInstance(s, sprite))
+    return link === undefined ? null : link[0]
+  }
+
+  private getSprite(piece: Piece): Sprite | null {
+    const link = this.linker.find(([p, _]) => isSameInstance(p, piece))
+    return link === undefined ? null : link[1]
+  }
+
+  /** 駒の所有者がチェンジした時に呼ぶ */
+  private changePieceOwner(piece: PieceSprite, isPlayer: boolean): void {
+    piece.angle += 180
+    this.input.setDraggable(piece, isPlayer)
+  }
+
+  /** 将棋盤に駒を並べる */
+  private initBoard(): void {
+    this.shogi.board.matForEach((piece, pos) => {
+      if (piece !== null) {
+        const pieceSprite = new PieceSprite(
+          this,
+          piece,
+          pos.x * CELL_SIZE,
+          pos.y * CELL_SIZE
+        )
+        this.boardContainer.add(pieceSprite)
+        pieceSprite.setInteractive()
+        this.linker.push([piece, pieceSprite])
+      }
+    })
+  }
+
+  /** プレイヤーが黒番か白番か確定した時に呼んで、ゲームの開始処理を行う */
+  private initGame(): void {
+    this.shogi.board.matForEach(piece => {
+      if (piece !== null && piece.owner === this.player) {
+        this.input.setDraggable(this.getSprite(piece) as PieceSprite)
+      }
+    })
+  }
+
+  private movePiece(boardPieceSprite: PieceSprite, to: Point, doPromote: boolean): void {
+    const movedPiece = this.getPiece(boardPieceSprite) as Piece
+    const takedPiece = this.shogi.board.at(to)
+    const from = this.shogi.getPosition(movedPiece) as Point
+
+    // 動かす
+    const res = this.shogi.move(from, to, doPromote)
+
+    if (res.type !== "ok") {
+      console.log("Move error", res)
+      // 動かせなかったら元に戻す
+      if (movedPiece.owner === this.player) {
+        boardPieceSprite.setPos(this.dragStartPosition as Point)
+      }
+      return
+    }
+
+    // 自分で動かしたなら相手に操作を伝える
+    if (movedPiece.owner === this.player) {
+      this.g.room.send({
+        type: "move",
+        from,
+        to,
+        doPromote
+      })
+    }
+
+    // 駒を取っていれば所有者を変えて取ったプレイヤーの持ち駒置き場に移動させる
+    if (takedPiece !== null) {
+      const handIndex = this.shogi.hand[movedPiece.owner].length - 1 // (この時点で既にshogi内の持ち駒は増えているので-1している)
+      const takedPieceSprite = this.getSprite(takedPiece) as PieceSprite
+      this.changePieceOwner(takedPieceSprite, movedPiece.owner === this.player)
+      takedPieceSprite.setPos(MainScene.getHandPosition(movedPiece.owner, handIndex))
+    }
+
+    // ゲームの駒を動かす
+    const movedPieceSprite = this.getSprite(movedPiece) as PieceSprite
+    movedPieceSprite.setPosition(to.x * CELL_SIZE, to.y * CELL_SIZE)
+  }
+
+  private placePiece(handPieceSprite: PieceSprite, to: Point): void {
+    const placedPiece = this.getPiece(handPieceSprite) as Piece
+    const handIndex = this.shogi.hand[placedPiece.owner].findIndex(piece => isSameInstance(piece, placedPiece))
+
+    // 置く
+    const res = this.shogi.placeHandPiece(placedPiece, to)
+
+    if (res.type !== "ok") {
+      console.log("Place error", res)
+      // 動かせなかったら元に戻す
+      if (placedPiece.owner === this.player) {
+        handPieceSprite.setPos(this.dragStartPosition as Point)
+      }
+      return
+    }
+
+    // 自分で動かしたなら相手に操作を伝える
+    if (placedPiece.owner === this.player) {
+      this.g.room.send({
+        type: "place",
+        pos: to,
+        handIndex
+      })
+    }
+
+    // ゲームの駒を置く
+    const placedPieceSprite = this.getSprite(placedPiece) as PieceSprite
+    placedPieceSprite.setPosition(to.x * CELL_SIZE, to.y * CELL_SIZE)
+  }
+
   public create(): void {
     this.g = this.game as Shogiverse
     this.background = this.add.sprite(WIDTH / 2, HEIGHT / 2, "board").setDisplaySize(HEIGHT, HEIGHT)
     this.boardContainer = this.add.container(WIDTH / 2 - CELL_SIZE * 4, HEIGHT / 2 - CELL_SIZE * 4)
-    this.shogi.board.matForEach((piece, pos) => {
-      if (piece !== null) {
-        const sprite = new PieceSprite(
-          this,
-          pos.x * CELL_SIZE,
-          pos.y * CELL_SIZE,
-          piece.type
-          + (piece.isPromote ? "+" : "")
-          + (piece.type === PieceType.King && piece.owner === Player.White ? "*" : "")
-        )
-        sprite.displayHeight = PIECE_SIZE
-        sprite.displayWidth = PIECE_SIZE * (sprite.width / sprite.height)
-        if (piece.owner === Player.White) { sprite.angle = 180 }
-        this.boardContainer.add(sprite)
-        sprite.setInteractive()
-        this.input.setDraggable(sprite)
-        this.linker.push([piece, sprite])
-      }
-    })
+    this.initBoard()
 
     this.input.on("dragstart", (pointer: Phaser.Input.Pointer, gameObject: Sprite) => {
+      this.dragStartPosition = {x: gameObject.x, y: gameObject.y}
       if (gameObject instanceof PieceSprite) {
         gameObject.depth = 1
       }
@@ -142,127 +221,52 @@ export class MainScene extends Phaser.Scene {
       if (gameObject instanceof PieceSprite) {
         gameObject.depth = 0
 
-        const to: Point = {
-          x: Math.round(gameObject.x / CELL_SIZE),
-          y: Math.round(gameObject.y / CELL_SIZE)
-        }
-        const gameObjectPiece = getPiece(this.linker, gameObject) as Piece
+        const to: Point = { x: Math.round(gameObject.x / CELL_SIZE), y: Math.round(gameObject.y / CELL_SIZE)}
+        const gameObjectPiece = this.getPiece(gameObject) as Piece
         const existsPieceInBoard = this.shogi.getPosition(gameObjectPiece) !== null
         const existsPieceInHand = this.shogi.hand[this.shogi.turnPlayer].some(p => isSameInstance(p, gameObjectPiece))
-        const takedPiece = this.shogi.board.at(to)
 
         if (existsPieceInBoard) {
-          // move
-          const piecePos = this.shogi.getPosition(gameObjectPiece) as Point
-          const res = this.shogi.move(piecePos, to)
-          if (res.type === "move_error") {
-            console.log("Move error: ", res)
-            gameObject.resetByBoardPosition()
-            return
-          }
-
-          this.g.room.send({
-            type: "move",
-            from: piecePos,
-            to,
-            isPromotion: false
-          })
-
+          this.movePiece(gameObject, to, false)
         } else if (existsPieceInHand) {
-          // put
-          const handIndex = this.shogi.hand[this.shogi.turnPlayer].findIndex(p => isSameInstance(p, gameObjectPiece))
-          const res = this.shogi.placeHandPiece(gameObjectPiece, to)
-          if (res.type === "put_error") {
-            console.log("Place error: ", res)
-            gameObject.resetByBoardPosition()
-            return
-          }
-
-          this.g.room.send({
-            type: "place",
-            pos: to,
-            handIndex
-          })
-
+          this.placePiece(gameObject, to)
         } else {
           throw new ShogiError("動かしている駒が持ち駒でも置いてある駒でもありません")
         }
-
-        // とった駒があれば持ち駒置き場に移動する
-        if (takedPiece !== null) {
-          const handIndex = this.shogi.hand[gameObjectPiece.owner].length - 1 // この時点で既にshogi内の持ち駒は増えているので-1
-          const takedPieceSprite = getSprite(this.linker, takedPiece) as PieceSprite
-          console.log(this.linker, takedPiece)
-          takedPieceSprite.moveToHand(handIndex, gameObjectPiece.owner)
-        }
-
-        // 駒を移動
-        gameObject.setNewBoardPosition({x: to.x * CELL_SIZE, y: to.y * CELL_SIZE})
       }
     })
 
     this.g.server.joinOrCreate("battle").then(room => {
       this.g.room = room
-      console.log(room.sessionId, "joined", room.name)
+      console.log(`Joined a room. Player ID : ${room.sessionId}, Room name : ${room.name}`)
 
       // tslint:disable-next-line: no-unsafe-any
       room.state.players.onAdd = (player: Scheme.Player, key: integer) => {
         if (player.id === room.sessionId) {
+          console.log(`Player color: ${player.color}`)
+          this.player = player.color as Player
           if (player.color === Player.White) {
             // 白番なら将棋盤をひっくり返す
-            console.log("rotate")
             this.boardContainer.setPosition(WIDTH / 2 + CELL_SIZE * 4, HEIGHT / 2 + CELL_SIZE * 4)
             this.boardContainer.angle = 180
           }
+
+          this.initGame()
         }
       }
 
       room.onMessage((msg: Message) => {
         switch (msg.type) {
           case "move": {
-            const {from, to, isPromotion} = msg
-            const movedPiece = this.shogi.board.at(from) as Piece
-            const takedPiece = this.shogi.board.at(to)
-
-            // move
-            const res = this.shogi.move(from, to)
-            if (res.type === "move_error") {
-              console.log("Move error: ", res)
-              throw new ShogiError("サーバーから無効な駒の移動操作が送られてきました")
-            }
-
-            // 取られた駒があれば相手の持ち駒置き場に移動する
-            if (takedPiece !== null) {
-              // この時点で既にshogi内の持ち駒は増えているので-1
-              const handIndex = this.shogi.hand[movedPiece.owner].length - 1
-              const takedPieceSprite = getSprite(this.linker, takedPiece) as PieceSprite
-              console.log(this.linker, takedPiece)
-              takedPieceSprite.moveToHand(handIndex, movedPiece.owner)
-            }
-
-            // 駒を移動
-            const movedPieceSprite = getSprite(this.linker, movedPiece) as PieceSprite
-            movedPieceSprite.setNewBoardPosition({x: to.x * CELL_SIZE, y: to.y * CELL_SIZE})
-
+            const {from, to, doPromote} = msg
+            const movedPieceSprite = this.getSprite(this.shogi.board.at(from) as Piece) as PieceSprite
+            this.movePiece(movedPieceSprite, to, doPromote)
             return
           }
           case "place": {
             const {pos, handIndex} = msg
-            const placedPiece = this.shogi.hand[this.shogi.turnPlayer][handIndex]
-
-            console.log(msg, this.shogi.turnPlayer, placedPiece, this.shogi.hand)
-
-            // put
-            const res = this.shogi.placeHandPiece(placedPiece, pos)
-            if (res.type === "put_error") {
-              console.log("Place error: ", res)
-              throw new ShogiError("サーバーから無効な駒の移動操作が送られてきました")
-            }
-
-            // 駒を移動
-            const placedPieceSprite = getSprite(this.linker, placedPiece) as PieceSprite
-            placedPieceSprite.setNewBoardPosition({x: pos.x * CELL_SIZE, y: pos.y * CELL_SIZE})
-
+            const placedPieceSprite = this.getSprite(this.shogi.hand[this.shogi.turnPlayer][handIndex]) as PieceSprite
+            this.placePiece(placedPieceSprite, pos)
             return
           }
         }
