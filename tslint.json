@@ -1,0 +1,25 @@
+{
+    "extends": [
+        "tslint:all",
+        "./src/library/tslint.json"
+    ],
+    "rules": {
+        "typedef": [
+            true,
+            "call-signature",
+            // "arrow-call-signature",
+            "paramater",
+            // "arrow-parameter,
+            "property-declaration",
+            // "variable-declaration",
+            "variable-declaration-ignore-function",
+            "member-variable-declaration",
+            "object-destructuring",
+            "array-destructuring"
+        ],
+        "completed-docs":false,
+        "comment-format":false,
+        "binary-expression-operand-order":false,
+        "switch-final-break":false
+    }
+}
