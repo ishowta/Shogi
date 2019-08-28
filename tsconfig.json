@@ -4,6 +4,7 @@
     "module": "commonjs",
     "sourceMap": true,
     "strict": true,
+    "experimentalDecorators": true,
     // create()で初期化したいがエラーになってしまうので
     "strictPropertyInitialization": false
   },

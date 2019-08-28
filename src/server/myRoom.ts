@@ -1,24 +1,8 @@
 import { Room, Client } from "colyseus"
 import { Schema, type, MapSchema } from "@colyseus/schema"
 import { Message } from "../messageTypes"
-
-class Player extends Schema {
-  @type("string")
-  color: string
-
-  constructor(color: string) {
-    super()
-    this.color = color
-  }
-}
-
-class MyState extends Schema {
-  @type("string")
-  currentTurn: string = "black"
-
-  @type({ map: Player })
-  players = new MapSchema<Player>()
-}
+import { MyState } from "./schemes"
+import * as Scheme from "./schemes"
 
 export class MyRoom extends Room {
   maxClients = 2
@@ -32,7 +16,7 @@ export class MyRoom extends Room {
 
   // tslint:disable-next-line: no-any
   onJoin(client: Client, options: any) {
-    this.state.players[client.id] = new Player(this.clients.length === 1 ? "black" : "white")
+    this.state.players[client.id] = new Scheme.Player(client.id, this.clients.length % 2 === 0 ? "black" : "white")
     if (this.clients.length === 2) {
       this.gameStartedFlag = true
     }

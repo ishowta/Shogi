@@ -7,6 +7,8 @@ import { Shogi } from "../../library/shogi/shogi"
 import { isSameInstance, Point } from "../../library/shogi/util"
 import { Shogiverse } from "../game"
 import { Message, MoveMessage } from "../../messageTypes"
+import { MyState } from "../../server/schemes"
+import * as Scheme from "../../server/schemes"
 
 type Sprite = Phaser.GameObjects.Sprite
 type Container = Phaser.GameObjects.Container
@@ -203,6 +205,18 @@ export class MainScene extends Phaser.Scene {
     this.g.server.joinOrCreate("battle").then(room => {
       this.g.room = room
       console.log(room.sessionId, "joined", room.name)
+
+      // tslint:disable-next-line: no-unsafe-any
+      room.state.players.onAdd = (player: Scheme.Player, key: integer) => {
+        if (player.id === room.sessionId) {
+          if (player.color === Player.White) {
+            // 白番なら将棋盤をひっくり返す
+            console.log("rotate")
+            this.boardContainer.setPosition(WIDTH / 2 + CELL_SIZE * 4, HEIGHT / 2 + CELL_SIZE * 4)
+            this.boardContainer.angle = 180
+          }
+        }
+      }
 
       room.onMessage((msg: Message) => {
         switch (msg.type) {

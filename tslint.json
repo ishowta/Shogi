@@ -13,7 +13,7 @@
             "property-declaration",
             // "variable-declaration",
             "variable-declaration-ignore-function",
-            "member-variable-declaration",
+            // "member-variable-declaration",
             // "object-destructuring",
             "array-destructuring"
         ],
@@ -21,6 +21,7 @@
         "comment-format":false,
         "binary-expression-operand-order":false,
         "switch-final-break":false,
-        "no-empty": false
+        "no-empty": false,
+        "member-access":false
     }
 }

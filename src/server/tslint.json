@@ -1,7 +1,7 @@
 {
     "extends": [
         "tslint:all",
-        "../tslint.json"
+        "../../tslint.json"
     ],
     "rules": {
         "typedef": [
