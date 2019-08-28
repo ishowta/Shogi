@@ -14,7 +14,7 @@
             // "variable-declaration",
             "variable-declaration-ignore-function",
             "member-variable-declaration",
-            "object-destructuring",
+            // "object-destructuring",
             "array-destructuring"
         ],
         "completed-docs":false,

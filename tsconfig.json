@@ -7,6 +7,9 @@
     // create()で初期化したいがエラーになってしまうので
     "strictPropertyInitialization": false
   },
+  "exclude": [
+    "src/server/"
+  ],
   "plugins": [
     {
       "name": "typescript-tslint-plugin"

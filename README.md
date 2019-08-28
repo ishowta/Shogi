@@ -1,9 +1,17 @@
 # Shogiverse
 
+## Require
+
+- MongoDB
+
 ## Install/Update dependencies
 
-`yarn`
+sever: `yarn`
+
+client: `cd src/server && yarn`
 
 ## Run
 
-`yarn run dev`
+server: `cd src/server && yarn run start`
+
+client: `yarn run dev`

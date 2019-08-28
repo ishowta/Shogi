@@ -13,11 +13,11 @@
             "property-declaration",
             // "variable-declaration",
             "variable-declaration-ignore-function",
-            "member-variable-declaration",
+            // "member-variable-declaration",
             "object-destructuring",
             "array-destructuring"
         ],
-        "prefer-function-over-method":false,
-        "member-access":false
+        "prefer-function-over-method": false,
+        "member-access": false
     }
 }
