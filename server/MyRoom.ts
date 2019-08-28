@@ -1,9 +1,12 @@
-import { Room, Client } from "colyseus";
+import { Room, Client } from "colyseus"
 
 export class MyRoom extends Room {
-  onCreate (options: any) {}
-  onJoin (client: Client, options: any) {}
-  onMessage (client: Client, message: any) {}
-  onLeave (client: Client, consented: boolean) {}
+  // tslint:disable-next-line: no-any
+  onCreate(options: any) {}
+  // tslint:disable-next-line: no-any
+  onJoin(client: Client, options: any) {}
+  // tslint:disable-next-line: no-any
+  onMessage(client: Client, message: any) {}
+  onLeave(client: Client, consented: boolean) {}
   onDispose() {}
 }

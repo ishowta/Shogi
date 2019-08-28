@@ -1,12 +1,12 @@
 {
     "extends": [
         "tslint:all",
-        "./src/library/tslint.json"
+        "../tslint.json"
     ],
     "rules": {
         "typedef": [
             true,
-            "call-signature",
+            // "call-signature",
             // "arrow-call-signature",
             "paramater",
             // "arrow-parameter,
@@ -17,10 +17,7 @@
             "object-destructuring",
             "array-destructuring"
         ],
-        "completed-docs":false,
-        "comment-format":false,
-        "binary-expression-operand-order":false,
-        "switch-final-break":false,
-        "no-empty": false
+        "prefer-function-over-method":false,
+        "member-access":false
     }
 }
