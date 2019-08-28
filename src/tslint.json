@@ -20,6 +20,7 @@
             "object-destructuring",
             "array-destructuring"
         ],
+        "prefer-readonly":false,
         "newline-before-return": false,
         "no-magic-numbers": false, // Want to true in game file
         "no-null-keyword": false,
@@ -43,6 +44,8 @@
         "no-namespace": false,
         "no-internal-module": false,
         "completed-docs":false,
-        "comment-format":false
+        "comment-format":false,
+        "binary-expression-operand-order":false,
+        "switch-final-break":false
     }
 }
