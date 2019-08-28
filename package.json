@@ -12,17 +12,30 @@
     "ts-loader": "6.0.4",
     "tslint": "^5.19.0",
     "typedoc": "^0.15.0",
-    "typescript": "3.5.2",
+    "typescript": "^3.6.2",
     "typescript-tslint-plugin": "^0.5.4",
     "webpack": "4.35.2",
     "webpack-cli": "3.3.5",
     "webpack-dev-server": "3.7.2"
   },
   "dependencies": {
-    "phaser": "3.18.1"
+    "@colyseus/loadtest": "^0.11.0",
+    "@colyseus/monitor": "^0.11.0",
+    "@colyseus/schema": "^0.4.54",
+    "@colyseus/social": "^0.11.0",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.1",
+    "colyseus": "^0.11.8",
+    "colyseus.js": "^0.11.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "phaser": "3.18.1",
+    "ts-node": "^8.3.0"
   },
   "scripts": {
-    "dev": "webpack --mode development && webpack-dev-server --mode development",
+    "client": "webpack --mode development && webpack-dev-server --mode development",
+    "server": "ts-node src/server/index.ts",
     "build": "webpack --mode development",
     "test": "jest --ci",
     "coverage": "jest --coverage && sleep 3 && open file://$(pwd)/coverage/lcov-report/index.html",

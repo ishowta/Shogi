@@ -43,6 +43,9 @@
         "semicolon": [true, "never"],
         "no-namespace": false,
         "no-internal-module": false,
-        "switch-final-break":false
+        "switch-final-break":false,
+        "ordered-imports":false,
+        "match-default-export-name":false,
+        "no-submodule-imports":false
     }
 }

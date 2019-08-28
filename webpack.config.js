@@ -4,7 +4,7 @@ var phaser = path.join(pathToPhaser, 'dist/phaser.js');
 
 module.exports = {
   entry: {
-    "shogiverse": './src/game.ts',
+    "shogiverse": './src/client/game.ts',
     "test": './tests/test.ts'
   },
   output: {

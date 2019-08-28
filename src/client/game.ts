@@ -2,8 +2,10 @@
 import "phaser"
 
 import { HEIGHT, WIDTH } from "./constant"
-import * as Shogi from "./library/shogi/shogi"
+import * as Shogi from "../library/shogi/shogi"
 import { MainScene } from "./scenes/mainScene"
+
+import * as Colyseus from "colyseus.js"
 
 // デバッグ用の将棋フレームワークのインスタンス
 interface IMyWindow extends Window {
@@ -32,9 +34,13 @@ const config: Phaser.Types.Core.GameConfig = {
 }
 
 /** Game class */
-export class Game extends Phaser.Game {
+export class Shogiverse extends Phaser.Game {
+  public server: Colyseus.Client
+  public room: Colyseus.Room
+
   public constructor(conf: Phaser.Types.Core.GameConfig) {
     super(conf)
+    this.server = new Colyseus.Client("ws://localhost:2567")
   }
 }
 
@@ -42,5 +48,5 @@ export class Game extends Phaser.Game {
 // tslint:disable-next-line: no-unsafe-any
 window.addEventListener("load", () => {
   // tslint:disable-next-line: prefer-const
-  let game: Game = new Game(config)
+  let game: Shogiverse = new Shogiverse(config)
 })
