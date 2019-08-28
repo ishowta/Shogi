@@ -1,17 +1,16 @@
 import { Room, Client } from "colyseus"
 import { Schema, type, MapSchema } from "@colyseus/schema"
 import { Message } from "../messageTypes"
-import { MyState } from "./schemes"
 import * as Scheme from "./schemes"
 
 export class MyRoom extends Room {
   maxClients = 2
-  state: MyState
+  state: Scheme.MyState
   gameStartedFlag = false
 
   // tslint:disable-next-line: no-any
   onCreate(options: any) {
-    this.setState(new MyState())
+    this.setState(new Scheme.MyState())
   }
 
   // tslint:disable-next-line: no-any

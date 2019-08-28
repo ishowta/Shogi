@@ -7,7 +7,6 @@ import { Shogi } from "../../library/shogi/shogi"
 import { isSameInstance, Point } from "../../library/shogi/util"
 import { Shogiverse } from "../game"
 import { Message, MoveMessage } from "../../messageTypes"
-import { MyState } from "../../server/schemes"
 import * as Scheme from "../../server/schemes"
 
 type Sprite = Phaser.GameObjects.Sprite
