@@ -1,8 +1,8 @@
-import { BitBoard, Board, PieceBoard } from "./board";
+import { BitBoard, Board, PieceBoard } from "./board"
 // tslint:disable-next-line:max-line-length
 import { BoundError, CantMoveError, CantPromoteError, DoublePawnFoul, DuplicateError, FoulError, MoveError, NeglectKingFoul , NoPieceError, NotOwnedPieceError, ShogiError, StrikingFoul, ThousandDaysFoul } from "./errors"
 import { Piece, PieceType } from "./piece"
-import { Player } from "./player";
+import { Player } from "./player"
 import { deepCopy, interpolation, interpolation2D, isSameInstance, max, min, Point, range } from "./util"
 
 /** OK */
