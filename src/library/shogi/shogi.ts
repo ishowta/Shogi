@@ -417,7 +417,7 @@ export class Shogi {
             if (checkStrike()) { return { type: "put_error", reason: new StrikingFoul() } }
 
             // ２歩
-            if (this.board.reduce((sum, line) => {
+            if (nextShogi.board.reduce((sum, line) => {
                 const p: Piece | null = line[pos.x]
                 return sum + ((p !== null && p.owner === piece.owner && p.type === PieceType.Pawn) ? 1 : 0)
             }, 0) === 2) {
