@@ -6,40 +6,40 @@
  * @param obj オブジェクト
  */
 export const deepCopy = <T>(obj: T): T => {
-    let copy: any;
+    let copy: any
 
     // Handle the 3 simple types, and null or undefined
-    if (null === obj || "object" !== typeof obj) { return obj; }
+    if (null === obj || "object" !== typeof obj) { return obj }
 
     // Handle Date
     if (obj instanceof Date) {
-        copy = new Date();
-        copy.setTime(obj.getTime());
+        copy = new Date()
+        copy.setTime(obj.getTime())
         copy.__proto__ = (obj as any).__proto__
-        return copy;
+        return copy
     }
 
     // Handle Array
     if (obj instanceof Array) {
-        copy = [];
+        copy = []
         for (let i = 0, len = obj.length; i < len; i += 1) {
-            copy[i] = deepCopy(obj[i]);
+            copy[i] = deepCopy(obj[i])
         }
         copy.__proto__ = (obj as any).__proto__
-        return copy;
+        return copy
     }
 
     // Handle Object
     if (obj instanceof Object) {
-        copy = {};
+        copy = {}
         for (const attr in obj) {
-            if ((obj as any).hasOwnProperty(attr)) { copy[attr] = deepCopy(obj[attr]); }
+            if ((obj as any).hasOwnProperty(attr)) { copy[attr] = deepCopy(obj[attr]) }
         }
         copy.__proto__ = (obj as any).__proto__
-        return copy;
+        return copy
     }
 
-    throw new Error("Unable to copy obj! Its type isn't supported.");
+    throw new Error("Unable to copy obj! Its type isn't supported.")
 }
 
 /**
