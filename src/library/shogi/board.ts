@@ -1,6 +1,6 @@
-import { Piece, PieceType } from "./piece";
-import { Player } from "./player";
-import { deepCopy, Point, range } from "./util";
+import { Piece, PieceType } from "./piece"
+import { Player } from "./player"
+import { deepCopy, Point, range } from "./util"
 
 /** 将棋盤 */
 export class Board<T> extends Array<T[]> {

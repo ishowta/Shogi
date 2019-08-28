@@ -40,7 +40,7 @@
         "member-ordering": false,
         "trailing-comma": false,
         "no-irregular-whitespace":false,
-        "semicolon": false,
+        "semicolon": [true, "never"],
         "no-namespace": false,
         "no-internal-module": false,
         "completed-docs":false,

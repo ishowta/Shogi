@@ -1,10 +1,10 @@
 import { CELL_SIZE, HEIGHT, PIECE_SIZE, WIDTH } from "../constant"
 import { Board } from "../library/shogi/board"
-import { ShogiError } from "../library/shogi/errors";
+import { ShogiError } from "../library/shogi/errors"
 import { Piece , PieceType } from "../library/shogi/piece"
-import { Player } from "../library/shogi/player";
+import { Player } from "../library/shogi/player"
 import { Shogi } from "../library/shogi/shogi"
-import { Point } from "../library/shogi/util";
+import { isSameInstance, Point } from "../library/shogi/util"
 
 type Sprite = Phaser.GameObjects.Sprite
 type Container = Phaser.GameObjects.Container
@@ -132,8 +132,8 @@ export class MainScene extends Phaser.Scene {
 
     this.input.on("drag", (pointer: Phaser.Input.Pointer, gameObject: Sprite, dragX: number, dragY: number) => {
       if (gameObject instanceof PieceSprite) {
-        gameObject.x = dragX;
-        gameObject.y = dragY;
+        gameObject.x = dragX
+        gameObject.y = dragY
       }
     })
 

@@ -1,6 +1,6 @@
-import { Board } from "./board";
-import { Player } from "./player";
-import { Point } from "./util";
+import { Board } from "./board"
+import { Player } from "./player"
+import { Point } from "./util"
 
 /** 駒の種類 */
 /** 駒の種類 */
