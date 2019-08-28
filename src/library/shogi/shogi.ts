@@ -1,6 +1,6 @@
 import { BitBoard, Board, PieceBoard } from "./board";
 // tslint:disable-next-line:max-line-length
-import { BoundError, CantMoveError, CantPromoteError, DoublePawnFoul, DuplicateError, FoulError, MoveError, NeglectKingFoul , NoPieceError, ShogiError, StrikingFoul, ThousandDaysFoul } from "./errors"
+import { BoundError, CantMoveError, CantPromoteError, DoublePawnFoul, DuplicateError, FoulError, MoveError, NeglectKingFoul , NoPieceError, NotOwnedPieceError, ShogiError, StrikingFoul, ThousandDaysFoul } from "./errors"
 import { Piece, PieceType } from "./piece"
 import { Player } from "./player";
 import { deepCopy, interpolation, interpolation2D, max, min, Point, range } from "./util"
@@ -14,7 +14,7 @@ export type Ok = {
 /** 駒を動かせない */
 export type MoveNotAllowedError = {
     /** 駒を置けない理由 */
-    reason: NoPieceError | CantMoveError | CantPromoteError | NeglectKingFoul
+    reason: NoPieceError | NotOwnedPieceError | CantMoveError | CantPromoteError | NeglectKingFoul
     /** type */
     type: "move_error"
 }
@@ -22,7 +22,8 @@ export type MoveNotAllowedError = {
 /** 駒を置けない */
 export type PlacementNotAllowedError = {
     /** 駒を置けない理由 */
-    reason: BoundError | DuplicateError | CantMoveError | StrikingFoul | DoublePawnFoul | NeglectKingFoul
+    reason: BoundError | NotOwnedPieceError | DuplicateError
+     | CantMoveError | StrikingFoul | DoublePawnFoul | NeglectKingFoul
     /** type */
     type: "put_error"
 }
@@ -322,7 +323,7 @@ export class Shogi {
         // そこに駒が置かれていない
         if (movedPiece === null) { return { type: "move_error", reason: new NoPieceError() } }
         // 相手の駒を動かそうとしている
-        if (movedPiece.owner !== this.turnPlayer) { return { type: "move_error", reason: new NoPieceError() } }
+        if (movedPiece.owner !== this.turnPlayer) { return { type: "move_error", reason: new NotOwnedPieceError() } }
 
         /// 駒を動かせるか
 
@@ -378,7 +379,7 @@ export class Shogi {
         if (!this.hand[this.turnPlayer].includes(piece)) { return { type: "put_error", reason: new NoPieceError() } }
 
         // 相手の持ち駒を動かそうとしている
-        if (piece.owner !== this.turnPlayer) { return { type: "put_error", reason: new NoPieceError() } }
+        if (piece.owner !== this.turnPlayer) { return { type: "put_error", reason: new NotOwnedPieceError() } }
 
         // 他の駒がある場所には置けない
         if (this.board.at(pos) !== null) { return { type: "put_error", reason: new DuplicateError() } }

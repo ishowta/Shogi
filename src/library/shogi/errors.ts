@@ -23,7 +23,9 @@ export class MoveError extends ShogiError { }
 export class BoundError extends MoveError { }
 /** 重複しているところに置こうとした */
 export class DuplicateError extends MoveError { }
-/** 存在しないピースを動かそうとした */
+/** 相手の駒を動かそうとした */
+export class NotOwnedPieceError extends MoveError { }
+/** 存在しない駒を動かそうとした */
 export class NoPieceError extends MoveError { }
 /** 動かせない場所に動かそうとした */
 export class CantMoveError extends MoveError { }
