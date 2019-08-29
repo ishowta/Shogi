@@ -45,12 +45,23 @@ export const deepCopy = <T>(obj: T): T => {
 /**
  * 範囲を指定して配列を生成する
  *
- * 参考：https://qiita.com/kmdsbng/items/f43dce6794f660e382da
  * @param start 左端
  * @param end 右端
  */
 export const range = (start: integer, end: integer): integer[] =>
-    Array.from({ length: (end - start + 1) }, (v, k) => k + start)
+    Array.from({ length: (end - start + 1) }, (_, k) => k + start)
+
+/**
+ * 範囲を指定してイテレーターを生成する
+ *
+ * @param start 左端
+ * @param end 右端
+ */
+export function* irange(start: integer, end: integer): IterableIterator<integer> {
+    for (let i = start; i <= end; i += 1) {
+        yield i
+    }
+}
 
 /** 小さい方の値を返す */
 export const min = (a: integer, b: integer) => a <= b ? a : b

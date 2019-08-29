@@ -1,6 +1,6 @@
 import { Piece, PieceType } from "./piece"
 import { Player } from "./player"
-import { deepCopy, Point, range } from "./util"
+import { deepCopy, Point, range, irange } from "./util"
 
 /** 将棋盤 */
 export class Board<T> extends Array<T[]> {
@@ -36,7 +36,8 @@ export class Board<T> extends Array<T[]> {
      * 位置pの要素を返す
      * @param p 位置
      */
-    public at(p: Point): T {
+    public at(p: Point): T | null {
+        if (!Board.inBound(p)) { return null }
         return this[p.y][p.x]
     }
 
@@ -132,7 +133,7 @@ export class Board<T> extends Array<T[]> {
     public zip(rhs: Board<T>): Board<[T, T]> {
         const b: Board<[T, T]> = new Board<[T, T]>()
         b.resetByArray(this.matMap((e, pos) => {
-            const t: [T, T]  = [e, rhs.at(pos)]
+            const t: [T, T]  = [e, rhs.at(pos) as T]
             return t
         }))
         return b
@@ -141,8 +142,8 @@ export class Board<T> extends Array<T[]> {
     /** 反転させる */
     private reverseMatrix(): void {
         const bufThis: this = deepCopy(this)
-        for (const y of range(0, Board.height - 1)) {
-            for (const x of range(0, Board.width - 1)) {
+        for (const y of irange(0, Board.height - 1)) {
+            for (const x of irange(0, Board.width - 1)) {
                 this[Board.height - 1 - y][Board.width - 1 - x] = bufThis[y][x]
             }
         }

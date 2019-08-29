@@ -329,7 +329,7 @@ export class Shogi {
         /// 駒を動かせるか
 
         // 駒の制約的に動かせない場所に動かそうとしている
-        if (!(this.isRestrictionPieceConstraits(movedPiece) as BitBoard).at(to)) {
+        if (!((this.isRestrictionPieceConstraits(movedPiece) as BitBoard).at(to) as boolean)) {
             return { type: "move_error", reason: new CantMoveError() }
         }
         // 動かそうとすると他の駒とぶつかる
@@ -361,11 +361,11 @@ export class Shogi {
             })()
 
             if (!allowNeglectKing) {
-            // 王手放置
-            if (Shogi.checkNeglectKing(nextShogi, this.turnPlayer === Player.Black ? Player.White : Player.Black)) {
-                return { type: "move_error", reason: new NeglectKingFoul() }
+                // 王手放置
+                if (Shogi.checkNeglectKing(nextShogi, this.turnPlayer === Player.Black ? Player.White : Player.Black)) {
+                    return { type: "move_error", reason: new NeglectKingFoul() }
+                }
             }
-        }
         }
 
         /// OK
@@ -504,12 +504,90 @@ export class Shogi {
         const kingPositionBitBoard: BitBoard = BitBoard.init().assign(kingPosition, true)
 
         // 相手の駒に王将に届く駒があるか判定
-        const opponentPieces: Piece[] = nextShogi.board.matFilter(
-            piece => piece !== null && piece.owner === nextTurnPlayer
-        ) as Piece[]
-        return opponentPieces.some(opponenctPiece =>
-            (nextShogi.findReachedArea(opponenctPiece, true) as BitBoard).mask(kingPositionBitBoard).exist()
-        )
+        {
+            // 王の周囲１マス以内
+            const king: Piece = nextShogi.board.at(kingPosition) as Piece
+            let negPieceList: PieceType[][] = [
+                // 左上から右下
+                [PieceType.SilverGeneral, PieceType.GoldGeneral, PieceType.King],
+                [PieceType.Pawn, PieceType.Lance, PieceType.SilverGeneral, PieceType.GoldGeneral, PieceType.King],
+                [PieceType.SilverGeneral, PieceType.GoldGeneral, PieceType.King],
+                [PieceType.GoldGeneral, PieceType.King],
+                [],
+                [PieceType.GoldGeneral, PieceType.King],
+                [PieceType.SilverGeneral, PieceType.King],
+                [PieceType.GoldGeneral, PieceType.King],
+                [PieceType.SilverGeneral, PieceType.King]
+            ]
+            let cnt: integer = 0
+            for (const dy of [-1, 0, 1]) {
+                for (const dx of [-1, 0, 1]) {
+                    const piece: Piece | null = nextShogi.board.at({x: kingPosition.x + dx, y: kingPosition.y + dy})
+                    if (piece !== null && piece.owner !== king.owner) {
+                        if (piece.isPromote) {
+                            if (piece.type === PieceType.Rook || piece.type === PieceType.Bishop) {return true}
+                            if (king.owner === Player.Black) {
+                                if (!(dy === 1 && dx !== 0)) {return true}
+                            } else {
+                                if (!(dy === -1 && dx !== 0)) {return true}
+                            }
+                        } else {
+                            if (king.owner === Player.White) {
+                                negPieceList = negPieceList.reverse()
+                            }
+                            if (negPieceList[cnt].includes(piece.type)) {return true}
+                        }
+                    }
+                    cnt += 1
+                }
+            }
+            // (Normal)Knight check
+            const knightCheck = (p: Piece | null) =>
+                p !== null && p.owner !== king.owner && p.type === PieceType.Knight && !p.isPromote
+            if (king.owner === Player.Black) {
+                if (knightCheck(nextShogi.board.at({x: kingPosition.x - 1, y: kingPosition.y - 2}))) {return true}
+                if (knightCheck(nextShogi.board.at({x: kingPosition.x + 1, y: kingPosition.y - 2}))) {return true}
+            } else {
+                if (knightCheck(nextShogi.board.at({x: kingPosition.x - 1, y: kingPosition.y + 2}))) {return true}
+                if (knightCheck(nextShogi.board.at({x: kingPosition.x + 1, y: kingPosition.y + 2}))) {return true}
+            }
+            // Rook Bishop check
+            const dif: Array<[number, number, PieceType]> = [
+                [-1, 0, PieceType.Rook],
+                [ 1, 0, PieceType.Rook],
+                [ 0, -1, PieceType.Rook],
+                [ 0, 1, PieceType.Rook],
+                [-1, -1, PieceType.Bishop],
+                [-1, 1, PieceType.Bishop],
+                [ 1, -1, PieceType.Bishop],
+                [ 1, 1, PieceType.Bishop]
+            ]
+            for (const d of dif) {
+                let pos: Point = {x: kingPosition.x, y: kingPosition.y}
+                while (!(pos.x < 0 || pos.x > 8 || pos.y < 0 ||  pos.y > 8)) {
+                    pos = {x:  pos.x + d[0], y: pos.y + d[1]}
+                    const p: Piece | null = nextShogi.board.at(pos)
+                    if (p !== null) {
+                        if (p.owner === king.owner) {
+                            break
+                        }
+                        if (p.type === d[2]) {
+                            return true
+                        }
+                        break
+                    }
+                }
+            }
+            return false
+            /* slow version
+            const opponentPieces: Piece[] = nextShogi.board.matFilter(
+                piece => piece !== null && piece.owner === nextTurnPlayer
+            ) as Piece[]
+            return opponentPieces.some(opponenctPiece =>
+                (nextShogi.findReachedArea(opponenctPiece, true) as BitBoard).mask(kingPositionBitBoard).exist()
+            )
+            */
+        }
     }
 
     /** 千日手チェック */
