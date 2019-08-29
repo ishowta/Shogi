@@ -15,3 +15,5 @@ client: `cd src/server && yarn`
 server: `cd src/server && yarn run start`
 
 client: `yarn run dev`
+
+２画面デバッグ: [http://localhost:8080/debug.html](http://localhost:8080/debug.html)
