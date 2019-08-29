@@ -127,7 +127,7 @@ export class MainScene extends Phaser.Scene {
     })
   }
 
-  private movePiece(boardPieceSprite: PieceSprite, to: Point, doPromote: boolean): void {
+  private movePiece(boardPieceSprite: PieceSprite, to: Point, doPromote: boolean, fromServer: boolean): void {
     const movedPiece = this.getPiece(boardPieceSprite) as Piece
     const takedPiece = this.shogi.board.at(to)
     const from = this.shogi.getPosition(movedPiece) as Point
@@ -138,14 +138,14 @@ export class MainScene extends Phaser.Scene {
     if (res.type !== "ok") {
       console.log("Move error", res)
       // 動かせなかったら元に戻す
-      if (movedPiece.owner === this.player) {
+      if (!fromServer) {
         boardPieceSprite.setPos(this.dragStartPosition as Point)
       }
       return
     }
 
     // 自分で動かしたなら相手に操作を伝える
-    if (movedPiece.owner === this.player) {
+    if (!fromServer) {
       this.g.room.send({
         type: "move",
         from,
@@ -167,7 +167,7 @@ export class MainScene extends Phaser.Scene {
     movedPieceSprite.setPosition(to.x * CELL_SIZE, to.y * CELL_SIZE)
   }
 
-  private placePiece(handPieceSprite: PieceSprite, to: Point): void {
+  private placePiece(handPieceSprite: PieceSprite, to: Point, fromServer: boolean): void {
     const placedPiece = this.getPiece(handPieceSprite) as Piece
     const handIndex = this.shogi.hand[placedPiece.owner].findIndex(piece => isSameInstance(piece, placedPiece))
 
@@ -177,14 +177,14 @@ export class MainScene extends Phaser.Scene {
     if (res.type !== "ok") {
       console.log("Place error", res)
       // 動かせなかったら元に戻す
-      if (placedPiece.owner === this.player) {
+      if (!fromServer) {
         handPieceSprite.setPos(this.dragStartPosition as Point)
       }
       return
     }
 
     // 自分で動かしたなら相手に操作を伝える
-    if (placedPiece.owner === this.player) {
+    if (!fromServer) {
       this.g.room.send({
         type: "place",
         pos: to,
@@ -227,9 +227,9 @@ export class MainScene extends Phaser.Scene {
         const existsPieceInHand = this.shogi.hand[this.shogi.turnPlayer].some(p => isSameInstance(p, gameObjectPiece))
 
         if (existsPieceInBoard) {
-          this.movePiece(gameObject, to, false)
+          this.movePiece(gameObject, to, false, false)
         } else if (existsPieceInHand) {
-          this.placePiece(gameObject, to)
+          this.placePiece(gameObject, to, false)
         } else {
           throw new ShogiError("動かしている駒が持ち駒でも置いてある駒でもありません")
         }
@@ -260,13 +260,13 @@ export class MainScene extends Phaser.Scene {
           case "move": {
             const {from, to, doPromote} = msg
             const movedPieceSprite = this.getSprite(this.shogi.board.at(from) as Piece) as PieceSprite
-            this.movePiece(movedPieceSprite, to, doPromote)
+            this.movePiece(movedPieceSprite, to, doPromote, true)
             return
           }
           case "place": {
             const {pos, handIndex} = msg
             const placedPieceSprite = this.getSprite(this.shogi.hand[this.shogi.turnPlayer][handIndex]) as PieceSprite
-            this.placePiece(placedPieceSprite, pos)
+            this.placePiece(placedPieceSprite, pos, true)
             return
           }
         }
@@ -275,6 +275,18 @@ export class MainScene extends Phaser.Scene {
         console.log("Room join error", e)
         throw new ShogiError("Room join error")
     })
+
+    this.add.text(50, 100, "Flip", { fill: "#0f0" })
+              .setInteractive()
+              .on("pointerdown", () => {
+                this.boardContainer.setPosition(WIDTH / 2 - CELL_SIZE * 4, HEIGHT / 2 - CELL_SIZE * 4)
+                this.boardContainer.angle += 180
+              })
+    this.add.text(50, 200, "Allow move all", { fill: "#0f0" })
+              .setInteractive()
+              .on("pointerdown", () => {
+                this.linker.forEach(([_, sprite]) => this.input.setDraggable(sprite))
+              })
   }
 
   // tslint:disable-next-line
