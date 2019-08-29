@@ -308,7 +308,8 @@ export class Shogi {
         from: Point,
         to: Point,
         doPromote: boolean = false,
-        skipFoul: boolean = false
+        skipFoul: boolean = false,
+        allowNeglectKing: boolean = false
     ): Ok | MoveNotAllowedError {
         // 将棋盤からはみ出ている
         if (!Board.inBound(from) || !Board.inBound(to)) {
@@ -359,10 +360,12 @@ export class Shogi {
                 return newShogi
             })()
 
+            if (!allowNeglectKing) {
             // 王手放置
             if (Shogi.checkNeglectKing(nextShogi, this.turnPlayer === Player.Black ? Player.White : Player.Black)) {
                 return { type: "move_error", reason: new NeglectKingFoul() }
             }
+        }
         }
 
         /// OK
@@ -447,7 +450,7 @@ export class Shogi {
         const checkMateEvenIfMove: boolean = challengerPieceList.some((piece) => {
             const piecePos: Point = this.getPosition(piece) as Point
             const reachedPosList: Point[] = this.board.matReduce<Point[]>((posList, _, pos) => {
-                if (this.checkCanMove(piecePos, pos, false).type === "ok") { posList.push(pos) }
+                if (this.checkCanMove(piecePos, pos, false, false, true).type === "ok") { posList.push(pos) }
                 return posList
             }, [])
 
