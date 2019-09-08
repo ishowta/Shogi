@@ -47,6 +47,8 @@
         "ordered-imports":false,
         "match-default-export-name":false,
         "no-submodule-imports":false,
-        "no-use-before-declare":false
+        "no-use-before-declare":false,
+        "linebreak-style":false,
+        "ban-comma-operator":false
     }
 }

@@ -70,12 +70,6 @@ export class Board<T> extends Array<T[]> {
         return res
     }
 
-    /** flatMap */
-    public flatMap<U>(fn: (line: T[], index: integer) => U[]): U[] {
-        const initialValue: U[] = []
-        return this.reduce((p, line, i) => p.concat(fn(line, i)), initialValue)
-    }
-
     /** matrix map */
     public matMap<U>(fn: (e: T, index: Point) => U): U[][] {
         return this.map((line, y) => line.map((e, x) => fn(e, { x, y })))
