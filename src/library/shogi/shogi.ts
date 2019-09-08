@@ -169,22 +169,9 @@ export class Shogi {
     /**
      * 駒が動けるエリアを示すbitboardを返す
      * @param piece 動かす駒
-     */
-    public isRestrictionPieceConstraits(piece: Piece): BitBoard | NoPieceError {
-        const piecePos: Point | null = this.getPosition(piece)
-
-        // 駒が将棋盤上に無い
-        if (piecePos === null) { return new NoPieceError() }
-
-        return Shogi.isRestrictionPieceConstraits(piece, piecePos)
-    }
-
-    /**
-     * 駒が動けるエリアを示すbitboardを返す
-     * @param piece 動かす駒
      * @param _pos 駒の現在地
      */
-    public static isRestrictionPieceConstraits(piece: Piece, _pos: Point): BitBoard {
+    private static isRestrictionPieceConstraits(piece: Piece, _pos: Point): BitBoard {
         const board: BitBoard = BitBoard.init()
 
         const _isRestrictionPieceConstraits = (pos: Point) => {
@@ -242,7 +229,8 @@ export class Shogi {
         /// 駒を動かせるか
 
         // 駒の制約的に動かせない場所に動かそうとしている
-        if (!((this.isRestrictionPieceConstraits(movedPiece) as BitBoard).at(to) as boolean)) {
+        if (!(Shogi.isRestrictionPieceConstraits(movedPiece, this.getPosition(movedPiece) as Point)
+            .at(to) as boolean)) {
             return { type: "move_error", reason: new CantMoveError() }
         }
         // 動かそうとすると他の駒とぶつかる
