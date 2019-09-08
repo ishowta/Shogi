@@ -1,7 +1,7 @@
 import { BitBoard, Board, PieceBoard } from "./board"
 // tslint:disable-next-line:max-line-length
 import { BoundError, CantMoveError, CantPromoteError, DoublePawnFoul, DuplicateError, FoulError, MoveError, NeglectKingFoul , NoPieceError, NotOwnedPieceError, ShogiError, StrikingFoul, ThousandDaysFoul } from "./errors"
-import { Piece, PieceType } from "./piece"
+import { Piece, PieceType, PieceMovableDir, Dir } from "./piece"
 import { Player } from "./player"
 import { deepCopy, interpolation, interpolation2D, isSameInstance, max, min, Point, range } from "./util"
 
@@ -182,113 +182,24 @@ export class Shogi {
     /**
      * 駒が動けるエリアを示すbitboardを返す
      * @param piece 動かす駒
-     * @param piece 動かす先
+     * @param _pos 駒の現在地
      */
     public static isRestrictionPieceConstraits(piece: Piece, _pos: Point): BitBoard {
         const board: BitBoard = BitBoard.init()
 
-        const _isRestrictionPieceConstraits = (pos: Point): BitBoard => {
-            const assign = (p: Point) => { if (Board.inBound(p)) { board.assign(p, true) } }
-
-            const rookAssign = () => {
-                range(0, Board.height - 1).filter(y => y !== pos.y).forEach(y => assign({ x: pos.x, y }))
-                range(0, Board.width - 1).filter(x => x !== pos.x).forEach(x => assign({ x, y: pos.y }))
-            }
-
-            const bishopAssign = () => {
-                // 各方向の斜めにみてく
-                const diagonalAssign = (dx: integer, dy: integer) => {
-                    let [x, y]: [integer, integer] = [pos.x, pos.y]
-                    do {
-                        assign({ x, y })
-                        x += dx
-                        y += dy
-                    } while (Board.inBound({x, y}))
+        const _isRestrictionPieceConstraits = (pos: Point) => {
+            const dirList: Dir[] = piece.isPromote ?
+                PieceMovableDir[piece.type].promoted :
+                PieceMovableDir[piece.type].normal
+            for (const dir of dirList) {
+                let currentPos: Point = {x: pos.x, y: pos.y}
+                let count: integer = 0
+                while (count < dir.times) {
+                    currentPos = {x: currentPos.x + dir.d.x, y: currentPos.y + dir.d.y}
+                    if (!Board.inBound(currentPos)) {break}
+                    board.assign(currentPos, true)
+                    count += 1
                 }
-                diagonalAssign(1, 1)
-                diagonalAssign(1, -1)
-                diagonalAssign(-1, 1)
-                diagonalAssign(-1, -1)
-            }
-
-            switch (piece.isPromote) {
-                case true:
-                    switch (piece.type) {
-                        case PieceType.Pawn:
-                        case PieceType.Lance:
-                        case PieceType.Knight:
-                        case PieceType.SilverGeneral:
-                            [
-                                [true, true, true],
-                                [true, false, true],
-                                [false, true, false],
-                            ]
-                            .forEach((line, y) => line.forEach((p, x) => {
-                                if (p) { assign({ x: pos.x + (x - 1), y: pos.y + (y - 1) }) }
-                            }))
-                            return board
-                        case PieceType.Rook:
-                            rookAssign()
-                            range(-1, 1).forEach(y => range(-1, 1).forEach(x => {
-                                assign({ x: pos.x + x, y: pos.y + y })
-                            }))
-                            return board
-                        case PieceType.Bishop:
-                            bishopAssign()
-                            range(-1, 1).forEach(y => range(-1, 1).forEach(x => {
-                                assign({ x: pos.x + x, y: pos.y + y })
-                            }))
-                            return board
-                        case PieceType.GoldGeneral:
-                        case PieceType.King:
-                            throw new ShogiError("成れない駒が成っています")
-                    }
-                case false:
-                    switch (piece.type) {
-                        case PieceType.Pawn:
-                            assign({ x: pos.x, y: pos.y - 1 })
-                            return board
-                        case PieceType.Lance:
-                            range(0, pos.y - 1).forEach(y => assign({ x: pos.x, y }))
-                            return board
-                        case PieceType.Knight:
-                            assign({ x: pos.x - 1, y: pos.y - 2 })
-                            assign({ x: pos.x + 1, y: pos.y - 2 })
-                            return board
-                        case PieceType.SilverGeneral:
-                            [
-                                [true, true, true],
-                                [false, false, false],
-                                [true, false, true],
-                            ]
-                            .forEach((line, y) => line.forEach((p, x) => {
-                                if (p) { assign({ x: pos.x + (x - 1), y: pos.y + (y - 1) })}
-                            }))
-                            return board
-                        case PieceType.GoldGeneral:
-                            [
-                                [true, true, true],
-                                [true, false, true],
-                                [false, true, false],
-                            ]
-                            .forEach((line, y) => line.forEach((p, x) => {
-                                if (p) { assign({ x: pos.x + (x - 1), y: pos.y + (y - 1) })}
-                            }))
-                            return board
-                        case PieceType.King:
-                            range(-1, 1).forEach(y => range(-1, 1).forEach(x => {
-                                if (!(pos.x === x && pos.y === y)) { assign({ x: pos.x + x, y: pos.y + y })}
-                            }))
-                            return board
-                        case PieceType.Rook:
-                            rookAssign()
-                            return board
-                        case PieceType.Bishop:
-                            bishopAssign()
-                            return board
-                        default:
-                            throw new ShogiError("")
-                    }
             }
         }
 
@@ -297,9 +208,11 @@ export class Shogi {
 
         switch (piece.owner) {
             case Player.Black:
-                return _isRestrictionPieceConstraits(_pos)
+                _isRestrictionPieceConstraits(_pos)
+                return board
             case Player.White:
-                return board.applyWithReverse(() => _isRestrictionPieceConstraits(reversePosition(_pos)))
+                board.applyWithReverse(() => _isRestrictionPieceConstraits(reversePosition(_pos)))
+                return board
         }
     }
 
@@ -388,13 +301,7 @@ export class Shogi {
         if (this.board.at(pos) !== null) { return { type: "put_error", reason: new DuplicateError() } }
 
         // 動けない位置に持ち駒を置いてはいけない
-        if (piece.type === PieceType.Pawn && pos.y === piece.lookY(0)) {
-            return { type: "put_error", reason: new CantMoveError() }
-        }
-        if (piece.type === PieceType.Lance && pos.y === piece.lookY(0)) {
-            return { type: "put_error", reason: new CantMoveError() }
-        }
-        if (piece.type === PieceType.Knight && (pos.y === piece.lookY(0) || pos.y === piece.lookY(1))) {
+        if (!Shogi.isRestrictionPieceConstraits(piece, pos).exist()) {
             return { type: "put_error", reason: new CantMoveError() }
         }
 
@@ -420,10 +327,10 @@ export class Shogi {
             if (checkStrike()) { return { type: "put_error", reason: new StrikingFoul() } }
 
             // ２歩
-            if (nextShogi.board.reduce((sum, line) => {
+            if (nextShogi.board.filter(line => {
                 const p: Piece | null = line[pos.x]
-                return sum + ((p !== null && p.owner === piece.owner && p.type === PieceType.Pawn) ? 1 : 0)
-            }, 0) === 2) {
+                return p !== null && p.owner === piece.owner && p.type === PieceType.Pawn
+            }).length === 2) {
                 return { type: "put_error", reason: new DoublePawnFoul() }
             }
 
@@ -440,18 +347,19 @@ export class Shogi {
 
     /** 詰みチェック */
     public checkCheckMate(): boolean {
-        // `checkNeglectKing()`をfalseに出来る打ち手がなければ詰み
         const challenger: Player = this.turnPlayer
         const opponent: Player = this.turnPlayer === Player.Black ? Player.White : Player.Black
 
+        /// `checkNeglectKing()`をfalseに出来る打ち手がなければ詰み
+
         // 可能な駒の移動をすべて試す
-        const challengerPieceList: Piece[] = this.board.flatMap((line) =>
-            line.filter((piece) => piece !== null && piece.owner === challenger)) as Piece[]
+        const challengerPieceList: Piece[] =
+            this.board.matFilter(piece => piece !== null && piece.owner === challenger) as Piece[]
         const canAvoidCheckMateByMove: boolean = challengerPieceList.some((piece) => {
             const piecePos: Point = this.getPosition(piece) as Point
             return Board.posMatrix().matSome(pos => {
                 if (this.checkCanMove(piecePos, pos, false, false, true).type === "ok") {
-                const shogi: Shogi = deepCopy(this)
+                    const shogi: Shogi = deepCopy(this)
                     shogi.move(piecePos, pos, false)
                     return !Shogi.checkNeglectKing(shogi, opponent)
                 }
@@ -462,11 +370,11 @@ export class Shogi {
         // 可能な持ち駒の設置をすべて試す
         const challengerHandPieceList: Piece[] = this.hand[challenger]
         const canAvoidCheckMateByPut: boolean = challengerHandPieceList.some((piece) => {
-                const pieceHandPos: number = this.hand[challenger].indexOf(piece)
+            const pieceHandPos: number = this.hand[challenger].indexOf(piece)
             Board.posMatrix().matSome((pos) => {
                 if (this.checkCanPlaceHandPiece(piece, pos).type === "ok") {
                     const shogi: Shogi = deepCopy(this)
-                const newPiece: Piece = shogi.hand[challenger][pieceHandPos]
+                    const newPiece: Piece = shogi.hand[challenger][pieceHandPos]
                     shogi.placeHandPiece(newPiece, pos)
                     return !Shogi.checkNeglectKing(shogi, opponent)
                 }
@@ -497,94 +405,15 @@ export class Shogi {
         const kingPosition: Point | null = nextShogi.board.matFindIndex(
             p => p !== null && p.owner === currentTurnPlayer && p.type === PieceType.King
         )
+
         if (kingPosition === null) { throw new ShogiError("王将がいません") }
-        const kingPositionBitBoard: BitBoard = BitBoard.init().assign(kingPosition, true)
 
         // 相手の駒に王将に届く駒があるか判定
-        {
-            // 王の周囲１マス以内
-            const king: Piece = nextShogi.board.at(kingPosition) as Piece
-            let negPieceList: PieceType[][] = [
-                // 左上から右下
-                [PieceType.SilverGeneral, PieceType.GoldGeneral, PieceType.King],
-                [PieceType.Pawn, PieceType.Lance, PieceType.SilverGeneral, PieceType.GoldGeneral, PieceType.King],
-                [PieceType.SilverGeneral, PieceType.GoldGeneral, PieceType.King],
-                [PieceType.GoldGeneral, PieceType.King],
-                [],
-                [PieceType.GoldGeneral, PieceType.King],
-                [PieceType.SilverGeneral, PieceType.King],
-                [PieceType.GoldGeneral, PieceType.King],
-                [PieceType.SilverGeneral, PieceType.King]
-            ]
-            let cnt: integer = 0
-            for (const dy of [-1, 0, 1]) {
-                for (const dx of [-1, 0, 1]) {
-                    const piece: Piece | null = nextShogi.board.at({x: kingPosition.x + dx, y: kingPosition.y + dy})
-                    if (piece !== null && piece.owner !== king.owner) {
-                        if (piece.isPromote) {
-                            if (piece.type === PieceType.Rook || piece.type === PieceType.Bishop) {return true}
-                            if (king.owner === Player.Black) {
-                                if (!(dy === 1 && dx !== 0)) {return true}
-                            } else {
-                                if (!(dy === -1 && dx !== 0)) {return true}
-                            }
-                        } else {
-                            if (king.owner === Player.White) {
-                                negPieceList = negPieceList.reverse()
-                            }
-                            if (negPieceList[cnt].includes(piece.type)) {return true}
-                        }
-                    }
-                    cnt += 1
-                }
-            }
-            // (Normal)Knight check
-            const knightCheck = (p: Piece | null) =>
-                p !== null && p.owner !== king.owner && p.type === PieceType.Knight && !p.isPromote
-            if (king.owner === Player.Black) {
-                if (knightCheck(nextShogi.board.at({x: kingPosition.x - 1, y: kingPosition.y - 2}))) {return true}
-                if (knightCheck(nextShogi.board.at({x: kingPosition.x + 1, y: kingPosition.y - 2}))) {return true}
-            } else {
-                if (knightCheck(nextShogi.board.at({x: kingPosition.x - 1, y: kingPosition.y + 2}))) {return true}
-                if (knightCheck(nextShogi.board.at({x: kingPosition.x + 1, y: kingPosition.y + 2}))) {return true}
-            }
-            // Rook Bishop check
-            const dif: Array<[number, number, PieceType]> = [
-                [-1, 0, PieceType.Rook],
-                [ 1, 0, PieceType.Rook],
-                [ 0, -1, PieceType.Rook],
-                [ 0, 1, PieceType.Rook],
-                [-1, -1, PieceType.Bishop],
-                [-1, 1, PieceType.Bishop],
-                [ 1, -1, PieceType.Bishop],
-                [ 1, 1, PieceType.Bishop]
-            ]
-            for (const d of dif) {
-                let pos: Point = {x: kingPosition.x, y: kingPosition.y}
-                while (!(pos.x < 0 || pos.x > 8 || pos.y < 0 ||  pos.y > 8)) {
-                    pos = {x:  pos.x + d[0], y: pos.y + d[1]}
-                    const p: Piece | null = nextShogi.board.at(pos)
-                    if (p !== null) {
-                        if (p.owner === king.owner) {
-                            break
-                        }
-                        if (p.type === d[2]) {
-                            return true
-                        }
-                        break
-                    }
-                }
-            }
-            return false
-            /* slow version
-            const opponentPieces: Piece[] = nextShogi.board.matFilter(
-                piece => piece !== null && piece.owner === nextTurnPlayer
-            ) as Piece[]
-            return opponentPieces.some(opponenctPiece =>
-                (nextShogi.findReachedArea(opponenctPiece, true) as BitBoard).mask(kingPositionBitBoard).exist()
-            )
-            */
-        }
+        return nextShogi.board.matSome((piece, pos) =>
+            piece !== null &&
+            piece.owner === nextTurnPlayer &&
+            nextShogi.checkCanMove(pos, kingPosition, false, false, true).type === "ok"
+        )
     }
 
     /** 千日手チェック */
@@ -592,10 +421,8 @@ export class Shogi {
         if (this.score.length < 4) { return false }
         const currentId: string = this.score[this.score.length - 1].id
         // 最後の手と同じ手がいくつあるか（最後の手も数える）
-        const duplicateWithCurrentIdCount: integer = this.score.slice(0, this.score.length).reduce((cnt, score) => {
-            const id: string = score.id
-            return cnt + (id === currentId ? 1 : 0)
-        }, 0)
+        const duplicateWithCurrentIdCount: integer =
+            this.score.slice(0, this.score.length).filter(score => score.id === currentId).length
         return duplicateWithCurrentIdCount >= 4
     }
 
@@ -621,43 +448,45 @@ export class Shogi {
     }
 
     /** 動かす時他の駒にぶつかるか */
-    public isCollideWithOtherPieces(piece: Piece, from: Point, to: Point): boolean {
-        const _isCollideWithOtherPieces = (): boolean => {
-            switch (piece.type) {
-                case PieceType.King:
-                case PieceType.GoldGeneral:
-                case PieceType.Knight:
-                case PieceType.Pawn:
-                case PieceType.SilverGeneral:
-                    return false
-                case PieceType.Lance:
-                    switch (piece.isPromote) {
-                        case true:
-                            return false
-                        case false:
-                            return interpolation(to.y, from.y).some(y => this.board[y][from.x] !== null)
-                    }
-                case PieceType.Rook:
-                    // 横
-                    if (from.x === to.x) {return interpolation(from.y, to.y).some(y => this.board[y][from.x] !== null)}
-                    // 縦
-                    if (from.y === to.y) {return interpolation(from.x, to.x).some(x => this.board[from.y][x] !== null)}
-                    // 斜めは１マスしか動けないのでぶつからない
-                    return false
-                case PieceType.Bishop:
-                    // 縦横は１マスしか動けないのでぶつからない
-                    if (from.x === to.x || from.y === to.y) { return false }
-                    // 斜め
-                    return interpolation2D(from, to).some(p => this.board.at(p) !== null)
+    public isCollideWithOtherPieces(piece: Piece, _from: Point, _to: Point): boolean {
+        const board: BitBoard = BitBoard.init()
+
+        const _isCollideWithOtherPieces = (from: Point, to: Point): boolean => {
+            const dirList: Dir[] = piece.isPromote ?
+                PieceMovableDir[piece.type].promoted :
+                PieceMovableDir[piece.type].normal
+            const usedDir: Dir = dirList.find(dir => {
+                // ∃n ∈ N: from + n * dir.d = to
+                const isNatural = (x: number) => Number.isInteger(x) && Math.sign(x) === 1
+                const xTimes: number = (to.x - from.x) / (dir.d.x)
+                const yTimes: number = (to.y - from.y) / (dir.d.y)
+                return (xTimes === yTimes && isNatural(xTimes))
+                        || (Number.isNaN(xTimes) && isNatural(yTimes))
+                        || (Number.isNaN(yTimes) && isNatural(xTimes))
+            }) as Dir
+            let currentPos: Point = {x: from.x, y: from.y}
+            let count: integer = 1
+            while (count < usedDir.times) {
+                currentPos = {x: currentPos.x + usedDir.d.x, y: currentPos.y + usedDir.d.y}
+                if (currentPos.x === to.x && currentPos.y === to.y) {return false}
+                if (this.board[currentPos.y][currentPos.x] !== null) {
+                    return true
+                }
+                count += 1
             }
+            return false
         }
 
-        const board: BitBoard = BitBoard.init()
+        const reversePosition = (pos: Point): Point =>
+            ({ x: Board.width - 1 - pos.x, y: Board.height - 1 - pos.y })
+
         switch (piece.owner) {
             case Player.Black:
-                return _isCollideWithOtherPieces()
+                return _isCollideWithOtherPieces(_from, _to)
             case Player.White:
-                return board.applyWithReverse(_isCollideWithOtherPieces)
+                return board.applyWithReverse(() =>
+                    _isCollideWithOtherPieces(reversePosition(_from), reversePosition(_to))
+                )
         }
     }
 
@@ -678,29 +507,8 @@ export class Shogi {
 
         this.board.forEach((line) => {
             console.log(
-                line.reduce((log, piece) =>
-                    log + (piece === null ? " 　 " : (() => {
-                        switch (piece.type) {
-                            case PieceType.Bishop:
-                                return loggedWithOwnerMark(piece.owner, piece.isPromote ? "馬" : "角")
-                            case PieceType.GoldGeneral:
-                                return loggedWithOwnerMark(piece.owner, piece.isPromote ? "？" : "金")
-                            case PieceType.King:
-                                return loggedWithOwnerMark(
-                                    piece.owner, piece.isPromote ? "？" : piece.owner === Player.Black ? "王" : "玉"
-                                )
-                            case PieceType.Knight:
-                                return loggedWithOwnerMark(piece.owner, piece.isPromote ? "金" : "桂")
-                            case PieceType.Lance:
-                                return loggedWithOwnerMark(piece.owner, piece.isPromote ? "金" : "香")
-                            case PieceType.Pawn:
-                                return loggedWithOwnerMark(piece.owner, piece.isPromote ? "と" : "歩")
-                            case PieceType.Rook:
-                                return loggedWithOwnerMark(piece.owner, piece.isPromote ? "竜" : "飛")
-                            case PieceType.SilverGeneral:
-                                return loggedWithOwnerMark(piece.owner, piece.isPromote ? "金" : "銀")
-                        }
-                    })()
+                line.reduce<string>((log, piece) =>
+                    log + (piece === null ? " 　 " : loggedWithOwnerMark(piece.owner, piece.toString())
                 ), "")
             )
         })
@@ -709,26 +517,8 @@ export class Shogi {
     /** 文字列に変換する（履歴は無視される） */
     public toString(): string {
         const toString = (player: Player) => player === Player.Black ? "0" : "1"
-        const pieceTypeToNumber = (type: PieceType): integer => {
-            switch (type) {
-                case PieceType.Pawn:
-                    return 0
-                case PieceType.Lance:
-                    return 1
-                case PieceType.Knight:
-                    return 2
-                case PieceType.SilverGeneral:
-                    return 3
-                case PieceType.GoldGeneral:
-                    return 4
-                case PieceType.Bishop:
-                    return 5
-                case PieceType.Rook:
-                    return 6
-                case PieceType.King:
-                    return 7
-            }
-        }
+        const pieceTypeToNumber = (type: PieceType): integer =>
+            Object.values(PieceType).findIndex(t => t === type)
         let data: string = ""
         data += `${toString(this.turnPlayer)},`
         data += `${this.hand[Player.Black].map(p => pieceTypeToNumber(p.type)).sort().join("")},`
@@ -763,17 +553,7 @@ export class Shogi {
     /** 文字列から将棋盤を生成する（履歴は無視される） */
     public static fromString(shogi: Shogi, data: string): Shogi {
         const fromString = (player: string) => player === "0" ? Player.Black : Player.White
-        const pieceFromNumber = (num: integer): PieceType =>
-            [
-                PieceType.Pawn,
-                PieceType.Lance,
-                PieceType.Knight,
-                PieceType.SilverGeneral,
-                PieceType.GoldGeneral,
-                PieceType.Bishop,
-                PieceType.Rook,
-                PieceType.King
-            ][num]
+        const pieceFromNumber = (num: integer): PieceType => Object.values(PieceType)[num]
         const splitedData: string[] = data.split(",")
         shogi.turnPlayer = fromString(splitedData[0])
         shogi.hand[Player.Black] =
