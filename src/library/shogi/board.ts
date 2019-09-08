@@ -32,7 +32,7 @@ export class Board<T> extends Array<T[]> {
         }
     }
 
-    /** 2次元配列で初期化 */
+    /** 座標を値として入れた盤面を作成 */
     public static posMatrix(): Board<Point> {
         const posBoard: Board<Point> = new Board<Point>()
         posBoard.resetByArray(range(0, Board.height - 1).map(y => range(0, Board.width - 1).map(x => ({x, y}))))
