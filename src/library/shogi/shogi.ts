@@ -416,23 +416,29 @@ export class Shogi {
 
     /** 持ち駒のpieceが置ける座標を示すbitboardを返す */
     public findPlaceableArea(piece: Piece): BitBoard | ShogiError {
-        // 持ち駒ではない
-        if (!this.hand[this.turnPlayer].includes(piece)) { return new ShogiError("持ち駒ではない") }
 
-        const piecePos: Point = this.getPosition(piece) as Point
-        return BitBoard.init(this.board.matMap((_, pos) => this.checkCanMove(piecePos, pos, false).type === "ok"))
+        // 持ち駒ではない
+        if (!this.hand[this.turnPlayer].includes(piece)) {
+            return new ShogiError("持ち駒ではない")
+        }
+
+        return BitBoard.init(
+            this.board.matMap((_, pos) => this.checkCanPlaceHandPiece(piece, pos, false).type === "ok")
+        )
     }
 
     /** pieceが移動できる座標を示すbitboardを返す */
-    public findReachedArea(piece: Piece, skipFoul: boolean = false): BitBoard | ShogiError {
+    public findMovableArea(piece: Piece, skipFoul: boolean = false): BitBoard | ShogiError {
+
         // 盤面にある自分の駒ではない
         if (this.getPosition(piece) === null || piece.owner !== this.turnPlayer) {
             return new ShogiError("盤面にある自分の駒ではない")
         }
 
         const piecePos: Point = this.getPosition(piece) as Point
-        const b: BitBoard = new BitBoard()
-        return BitBoard.init(this.board.matMap((_, pos) => this.checkCanMove(piecePos, pos, false, skipFoul).type === "ok"))
+        return BitBoard.init(
+            this.board.matMap((_, pos) => this.checkCanMove(piecePos, pos, false, skipFoul).type === "ok")
+        )
     }
 
     /** 動かす時他の駒にぶつかるか */
