@@ -440,44 +440,41 @@ export class Shogi {
 
     /** 詰みチェック */
     public checkCheckMate(): boolean {
-        // 全ての行動にたいして`checkNeglectKing()`がTrueであれば詰み
+        // `checkNeglectKing()`をfalseに出来る打ち手がなければ詰み
         const challenger: Player = this.turnPlayer
         const opponent: Player = this.turnPlayer === Player.Black ? Player.White : Player.Black
 
         // 可能な駒の移動をすべて試す
         const challengerPieceList: Piece[] = this.board.flatMap((line) =>
             line.filter((piece) => piece !== null && piece.owner === challenger)) as Piece[]
-        const checkMateEvenIfMove: boolean = challengerPieceList.some((piece) => {
+        const canAvoidCheckMateByMove: boolean = challengerPieceList.some((piece) => {
             const piecePos: Point = this.getPosition(piece) as Point
-            const reachedPosList: Point[] = this.board.matReduce<Point[]>((posList, _, pos) => {
-                if (this.checkCanMove(piecePos, pos, false, false, true).type === "ok") { posList.push(pos) }
-                return posList
-            }, [])
-
-            return reachedPosList.some((dstPos) => {
+            return Board.posMatrix().matSome(pos => {
+                if (this.checkCanMove(piecePos, pos, false, false, true).type === "ok") {
                 const shogi: Shogi = deepCopy(this)
-                shogi.move(piecePos, dstPos, false)
-                return Shogi.checkNeglectKing(shogi, opponent)
+                    shogi.move(piecePos, pos, false)
+                    return !Shogi.checkNeglectKing(shogi, opponent)
+                }
+                return false
             })
         })
 
         // 可能な持ち駒の設置をすべて試す
         const challengerHandPieceList: Piece[] = this.hand[challenger]
-        const checkMateEvenIfPut: boolean = challengerHandPieceList.some((piece) => {
-            const placeablePosList: Point[] = this.board.matReduce<Point[]>((posList, _, pos) => {
-                if (this.checkCanPlaceHandPiece(piece, pos).type === "ok") { posList.push(pos) }
-                return posList
-            }, [])
-
-            return placeablePosList.some((dstPos) => {
-                const shogi: Shogi = deepCopy(this)
+        const canAvoidCheckMateByPut: boolean = challengerHandPieceList.some((piece) => {
                 const pieceHandPos: number = this.hand[challenger].indexOf(piece)
+            Board.posMatrix().matSome((pos) => {
+                if (this.checkCanPlaceHandPiece(piece, pos).type === "ok") {
+                    const shogi: Shogi = deepCopy(this)
                 const newPiece: Piece = shogi.hand[challenger][pieceHandPos]
-                shogi.placeHandPiece(newPiece, dstPos)
-                return Shogi.checkNeglectKing(shogi, opponent)
+                    shogi.placeHandPiece(newPiece, pos)
+                    return !Shogi.checkNeglectKing(shogi, opponent)
+                }
+                return false
             })
         })
-        return checkMateEvenIfMove || checkMateEvenIfPut
+
+        return canAvoidCheckMateByMove || canAvoidCheckMateByPut
     }
 
     // TODO: チェックを駒を置けるかチェックする段階で行うように変更
