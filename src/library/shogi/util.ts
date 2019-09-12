@@ -77,6 +77,11 @@ export type Point = {
     readonly y: integer
 }
 
+export const add = (a: Point, b: Point) => ({x: a.x + b.x, y: a.y + b.y})
+export const sub = (a: Point, b: Point) => ({x: a.x - b.x, y: a.y - b.y})
+export const mul = (a: Point, b: Point) => ({x: a.x * b.x, y: a.y * b.y})
+export const div = (a: Point, b: Point) => ({x: a.x / b.x, y: a.y / b.y})
+
 /** aとbの間にある座標のリストを返す（aやbは含まない） */
 export const interpolation = (c: integer, d: integer): integer[] =>
         range(min(c, d) + 1, max(c, d) - 1)
@@ -87,6 +92,9 @@ export const interpolation2D = (a: Point, b: Point): Point[] => {
     const rangeY: integer[] = a.y < b.y ? interpolation(a.y, b.y) : interpolation(a.y, b.y).reverse()
     return rangeX.map<Point>((_, i) => ({x: rangeX[i], y: rangeY[i]}))
 }
+
+/** オブジェクトの要素が同一であるか */
+export const equal = (a: object, b: object): boolean => JSON.stringify(a) === JSON.stringify(b)
 
 /** Syntax sugar of a === b */
 export const isSameInstance = <T>(a: T, b: T): boolean => Object.is(a, b)

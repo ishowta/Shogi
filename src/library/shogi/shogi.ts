@@ -3,7 +3,7 @@ import { BitBoard, Board, PieceBoard } from "./board"
 import { BoundError, CantMoveError, CantPromoteError, DoublePawnFoul, DuplicateError, FoulError, MoveError, NeglectKingFoul , NoPieceError, NotOwnedPieceError, ShogiError, StrikingFoul, ThousandDaysFoul } from "./errors"
 import { Piece, PieceType, PieceMovableDir, Dir } from "./piece"
 import { Player } from "./player"
-import { deepCopy, interpolation, interpolation2D, isSameInstance, max, min, Point, range } from "./util"
+import { deepCopy, isSameInstance, Point, add, equal } from "./util"
 
 /** OK */
 export type Ok = {
@@ -179,10 +179,10 @@ export class Shogi {
                 PieceMovableDir[piece.type].promoted :
                 PieceMovableDir[piece.type].normal
             for (const dir of dirList) {
-                let currentPos: Point = {x: pos.x, y: pos.y}
+                let currentPos: Point = pos
                 let count: integer = 0
                 while (count < dir.times) {
-                    currentPos = {x: currentPos.x + dir.d.x, y: currentPos.y + dir.d.y}
+                    currentPos = add(currentPos, dir.d)
                     if (!Board.inBound(currentPos)) {break}
                     board.assign(currentPos, true)
                     count += 1
@@ -449,21 +449,21 @@ export class Shogi {
             const dirList: Dir[] = piece.isPromote ?
                 PieceMovableDir[piece.type].promoted :
                 PieceMovableDir[piece.type].normal
+            // ∃dir ∈ Dir, ∃n ∈ N, from + n * dir.d = to
             const usedDir: Dir = dirList.find(dir => {
-                // ∃n ∈ N: from + n * dir.d = to
                 const isNatural = (x: number) => Number.isInteger(x) && Math.sign(x) === 1
-                const xTimes: number = (to.x - from.x) / (dir.d.x)
-                const yTimes: number = (to.y - from.y) / (dir.d.y)
-                return (xTimes === yTimes && isNatural(xTimes))
-                        || (Number.isNaN(xTimes) && isNatural(yTimes))
-                        || (Number.isNaN(yTimes) && isNatural(xTimes))
+                const nx: number = (to.x - from.x) / (dir.d.x)
+                const ny: number = (to.y - from.y) / (dir.d.y)
+                return (nx === ny && isNatural(nx))
+                        || (Number.isNaN(nx) && isNatural(ny))
+                        || (Number.isNaN(ny) && isNatural(nx))
             }) as Dir
-            let currentPos: Point = {x: from.x, y: from.y}
+            let currentPos: Point = from
             let count: integer = 1
             while (count < usedDir.times) {
-                currentPos = {x: currentPos.x + usedDir.d.x, y: currentPos.y + usedDir.d.y}
-                if (currentPos.x === to.x && currentPos.y === to.y) {return false}
-                if (this.board[currentPos.y][currentPos.x] !== null) {
+                currentPos = add(currentPos, usedDir.d)
+                if (equal(currentPos, to)) {return false}
+                if (this.board.at(currentPos) !== null) {
                     return true
                 }
                 count += 1
@@ -496,13 +496,13 @@ export class Shogi {
 
     /** 将棋盤をログに表示 */
     public printBoard(): void {
-        const loggedWithOwnerMark = (owner: Player, text: string): string =>
+        const WrapWithOwnerMark = (owner: Player, text: string): string =>
             (owner === Player.Black ? " " : "(") + text + (owner === Player.Black ? " " : ")")
 
         this.board.forEach((line) => {
             console.log(
                 line.reduce<string>((log, piece) =>
-                    log + (piece === null ? " 　 " : loggedWithOwnerMark(piece.owner, piece.toString())
+                    String(log) + (piece === null ? " 　 " : WrapWithOwnerMark(piece.owner, piece.toString())
                 ), "")
             )
         })
