@@ -8,24 +8,24 @@ import { deepCopy, interpolation, interpolation2D, isSameInstance, max, min, Poi
 /** OK */
 export type Ok = {
     /** type */
-    type: "ok"
+    readonly type: "ok"
 }
 
 /** 駒を動かせない */
 export type MoveNotAllowedError = {
     /** 駒を置けない理由 */
-    reason: NoPieceError | NotOwnedPieceError | CantMoveError | CantPromoteError | NeglectKingFoul
+    readonly reason: NoPieceError | NotOwnedPieceError | CantMoveError | CantPromoteError | NeglectKingFoul
     /** type */
-    type: "move_error"
+    readonly type: "move_error"
 }
 
 /** 駒を置けない */
 export type PlacementNotAllowedError = {
     /** 駒を置けない理由 */
-    reason: BoundError | NotOwnedPieceError | DuplicateError
+    readonly reason: BoundError | NotOwnedPieceError | DuplicateError
      | CantMoveError | StrikingFoul | DoublePawnFoul | NeglectKingFoul
     /** type */
-    type: "put_error"
+    readonly type: "put_error"
 }
 
 /** 指し手のログ */
