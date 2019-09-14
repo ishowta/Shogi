@@ -25,12 +25,26 @@ export type Ok = {
 	readonly type: "ok"
 }
 
+/** チェックメイト */
+export type Checkmate = {
+	/** type */
+	readonly type: "checkmate"
+}
+
 /** 駒を動かせない */
 export type MoveNotAllowedError = {
 	/** 駒を動かせない理由 */
 	readonly reason: NoPieceError | NotOwnedPieceError | CantMoveError | CantPromoteError | NeglectKingFoul
 	/** type */
 	readonly type: "move_error"
+}
+
+/** 置けるが負け判定になる反則 */
+export type Foul = {
+	/** 駒を動かせない理由 */
+	readonly reason: ThousandDaysFoul
+	/** type */
+	readonly type: "foul"
 }
 
 /** 駒を置けない */
@@ -50,8 +64,6 @@ export type PlacementNotAllowedError = {
 
 /** 指し手のログ */
 export type MoveLog = {
-	// TODO: たどり着ける同じ種類の駒が複数あった場合の表記に対応する
-
 	/** 移動する前の駒の位置 */
 	readonly from: Point | null
 	/**
@@ -106,8 +118,16 @@ export class Shogi {
 	/// Shogi operators
 
 	/** プレイヤーを交代する */
-	private changePlayer(): void {
+	private changePlayer(): Ok | Foul | Checkmate {
 		this.turnPlayer = this.turnPlayer === Player.Black ? Player.White : Player.Black
+		const checkFoulRes: Ok | Foul = this.checkFoul()
+		if (checkFoulRes.type === "foul") {
+			return checkFoulRes
+		}
+		if (this.checkCheckMate()) {
+			return { type: "checkmate" }
+		}
+		return { type: "ok" }
 	}
 
 	/** 駒を進める */
@@ -116,72 +136,75 @@ export class Shogi {
 		to: Point,
 		doPromote: boolean = false,
 		skipFoul: boolean = false
-	): Ok | MoveNotAllowedError {
+	): Ok | MoveNotAllowedError | Foul | Checkmate {
 		const canMove: Ok | MoveNotAllowedError = this.checkCanMove(from, to, doPromote, skipFoul)
-		if (canMove.type === "ok") {
-			const takenPiece: Piece | null = this.board.at(to)
-			const movedPiece: Piece = this.board.at(from) as Piece
-
-			// 成りたいのであれば成る
-			if (doPromote) {
-				movedPiece.isPromote = true
-			}
-
-			// 駒を取れたら持ち駒に加える
-			if (takenPiece !== null) {
-				const newHandPiece: Piece = takenPiece
-				newHandPiece.owner = this.turnPlayer
-				newHandPiece.isPromote = false
-				this.hand[this.turnPlayer].push(newHandPiece)
-			}
-
-			// 移動
-			this.board.assign(to, movedPiece)
-			this.board.assign(from, null)
-
-			// 棋譜に書き込む
-			this.score.push({
-				player: this.turnPlayer,
-				position: to,
-				pieceType: movedPiece.type,
-				isPromotion: doPromote,
-				from,
-				isPromoted: movedPiece.isPromote || doPromote,
-				id: this.toString()
-			})
-
-			// 交代
-			this.changePlayer()
+		if (canMove.type === "move_error") {
+			return canMove
 		}
-		return canMove
+		const takenPiece: Piece | null = this.board.at(to)
+		const movedPiece: Piece = this.board.at(from) as Piece
+
+		// 成りたいのであれば成る
+		if (doPromote) {
+			movedPiece.isPromote = true
+		}
+
+		// 駒を取れたら持ち駒に加える
+		if (takenPiece !== null) {
+			const newHandPiece: Piece = takenPiece
+			newHandPiece.owner = this.turnPlayer
+			newHandPiece.isPromote = false
+			this.hand[this.turnPlayer].push(newHandPiece)
+		}
+
+		// 移動
+		this.board.assign(to, movedPiece)
+		this.board.assign(from, null)
+
+		// 棋譜に書き込む
+		this.score.push({
+			player: this.turnPlayer,
+			position: to,
+			pieceType: movedPiece.type,
+			isPromotion: doPromote,
+			from,
+			isPromoted: movedPiece.isPromote || doPromote,
+			id: this.toString()
+		})
+
+		// 交代
+		return this.changePlayer()
 	}
 
 	/** 持ち駒を置く */
-	public placeHandPiece(piece: Piece, pos: Point, skipFoul: boolean = false): Ok | PlacementNotAllowedError {
+	public placeHandPiece(
+		piece: Piece,
+		pos: Point,
+		skipFoul: boolean = false
+	): Ok | PlacementNotAllowedError | Foul | Checkmate {
 		const canPut: Ok | PlacementNotAllowedError = this.checkCanPlaceHandPiece(piece, pos, skipFoul)
-		if (canPut.type === "ok") {
-			// 置く
-			this.board.assign(pos, piece)
-
-			// 持ち駒から取り除く
-			this.hand[this.turnPlayer] = this.hand[this.turnPlayer].filter(p => !isSameInstance(p, piece))
-
-			// 棋譜に書き込む
-			this.score.push({
-				player: this.turnPlayer,
-				position: pos,
-				pieceType: piece.type,
-				isPromotion: false,
-				from: null,
-				isPromoted: false,
-				id: this.toString()
-			})
-
-			// 交代
-			this.changePlayer()
+		if (canPut.type === "put_error") {
+			return canPut
 		}
+		// 置く
+		this.board.assign(pos, piece)
 
-		return canPut
+		// 持ち駒から取り除く
+		this.hand[this.turnPlayer] = this.hand[this.turnPlayer].filter(p => !isSameInstance(p, piece))
+
+		// 棋譜に書き込む
+		this.score.push({
+			player: this.turnPlayer,
+			position: pos,
+			pieceType: piece.type,
+			isPromotion: false,
+			from: null,
+			isPromoted: false,
+			id: this.toString()
+		})
+
+		// 交代
+		return this.changePlayer()
 	}
 
 	/// Public utils
@@ -415,12 +438,11 @@ export class Shogi {
 		return canAvoidCheckMateByMove || canAvoidCheckMateByPut
 	}
 
-	// TODO: チェックを駒を置けるかチェックする段階で行うように変更
 	/** 反則チェック */
-	public checkFoul(): Ok | FoulError {
+	public checkFoul(): Ok | Foul {
 		// 千日手
 		if (this.checkThousandDays()) {
-			return new ThousandDaysFoul()
+			return { type: "foul", reason: new ThousandDaysFoul() }
 		}
 
 		return { type: "ok" }
