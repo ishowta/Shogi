@@ -1,8 +1,16 @@
 {
     "extends": [
-        "tslint:all"
+        "tslint:all",
+        "tslint-config-prettier"
     ],
+    "rulesDirectory": ["tslint-plugin-prettier"],
     "rules": {
+        "prettier": [true, {
+            "semi": false,
+            "tabWidth": 4,
+            "useTabs": true,
+            "printWidth": 120
+        }],
         "no-inferrable-types": [
             false,
             "ignore-params"

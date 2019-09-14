@@ -1,11 +1,13 @@
 {
-    "editor.formatOnSave": false,
-    "editor.formatOnPaste": false,
-    "editor.formatOnType": false,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.tslint": true
-    },
-    "files.associations": {
-        "*.json": "jsonc"
-    }
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.tslint": true
+  },
+  "files.associations": {
+    "*.json": "jsonc"
+  },
+  "editor.tabSize": 4,
+  "editor.tabCompletion": "on"
 }

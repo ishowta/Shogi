@@ -15,8 +15,8 @@ app.use(express.json())
 
 const server = http.createServer(app)
 const gameServer = new Server({
-  server,
-  express: app
+	server,
+	express: app
 })
 
 // register your room handlers
@@ -29,4 +29,4 @@ app.use("/", socialRoutes)
 app.use("/colyseus", monitor(gameServer))
 
 gameServer.listen(port)
-console.log(`Listening on ws://localhost:${ port }`)
+console.log(`Listening on ws://localhost:${port}`)
