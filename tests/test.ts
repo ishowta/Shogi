@@ -6,7 +6,8 @@ import {
 	NeglectKingFoul,
 	NoPieceError,
 	StrikingFoul,
-	NotOwnedPieceError
+	NotOwnedPieceError,
+	ThousandDaysFoul
 } from "../src/library/shogi/errors"
 import { Piece } from "../src/library/shogi/piece"
 import { Player } from "../src/library/shogi/player"
@@ -141,7 +142,8 @@ it("王手放置", () => {
 it("チェックメイトチェック", () => {
 	shogi = Shogi.fromString(
 		shogi,
-		"1,17,,610-510-410-_-010-_-410-510-610,_-_-_-_-700-_-310-210-_,710-710-310-710-_-710-_-710-_,_-_-710-_-_-_-710-_-710,_-_-_-_-_-_-_-_-700,_-_-700-_-_-_-_-_-_,700-700-_-700-_-700-700-700-_,_-200-_-_-100-_-_-_-_,600-500-400-300-000-300-400-500-600"
+		"1,7,7,610-510-410-_-010-_-410-510-610,_-_-_-_-300-_-310-210-_,710-110-710-710-_-710-710-710-_,_-710-_-_-_-_-_-_-_,_-700-_-_-100-_-_-_-710,_-_-_-_-_-_-_-_-700,700-_-700-700-_-700-700-700-_,_-200-_-_-_-_-_-_-_,600-500-400-300-000-300-400-500-600"
 	)
+	shogi.checkCheckMate()
 	assert(shogi.checkCheckMate())
 })

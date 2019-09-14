@@ -118,14 +118,11 @@ export class Shogi {
 	/// Shogi operators
 
 	/** プレイヤーを交代する */
-	private changePlayer(): Ok | Foul | Checkmate {
+	private changePlayer(): Ok | Foul {
 		this.turnPlayer = this.turnPlayer === Player.Black ? Player.White : Player.Black
 		const checkFoulRes: Ok | Foul = this.checkFoul()
 		if (checkFoulRes.type === "foul") {
 			return checkFoulRes
-		}
-		if (this.checkCheckMate()) {
-			return { type: "checkmate" }
 		}
 		return { type: "ok" }
 	}
@@ -135,9 +132,10 @@ export class Shogi {
 		from: Point,
 		to: Point,
 		doPromote: boolean = false,
-		skipFoul: boolean = false
-	): Ok | MoveNotAllowedError | Foul | Checkmate {
-		const canMove: Ok | MoveNotAllowedError = this.checkCanMove(from, to, doPromote, skipFoul)
+		skipFoul: boolean = false,
+		allowNeglectKing: boolean = false
+	): Ok | MoveNotAllowedError | Foul {
+		const canMove: Ok | MoveNotAllowedError = this.checkCanMove(from, to, doPromote, skipFoul, allowNeglectKing)
 		if (canMove.type === "move_error") {
 			return canMove
 		}
@@ -177,11 +175,7 @@ export class Shogi {
 	}
 
 	/** 持ち駒を置く */
-	public placeHandPiece(
-		piece: Piece,
-		pos: Point,
-		skipFoul: boolean = false
-	): Ok | PlacementNotAllowedError | Foul | Checkmate {
+	public placeHandPiece(piece: Piece, pos: Point, skipFoul: boolean = false): Ok | PlacementNotAllowedError | Foul {
 		const canPut: Ok | PlacementNotAllowedError = this.checkCanPlaceHandPiece(piece, pos, skipFoul)
 		if (canPut.type === "put_error") {
 			return canPut
@@ -397,8 +391,16 @@ export class Shogi {
 		return { type: "ok" }
 	}
 
+	// tslint:disable-next-line
+	private avoidLoopOfCheckCheckMate = false
+
 	/** 詰みチェック */
 	public checkCheckMate(): boolean {
+		if (this.avoidLoopOfCheckCheckMate) {
+			return false
+		}
+		this.avoidLoopOfCheckCheckMate = true
+
 		const challenger: Player = this.turnPlayer
 		const opponent: Player = this.turnPlayer === Player.Black ? Player.White : Player.Black
 
@@ -413,7 +415,7 @@ export class Shogi {
 			return Board.posMatrix().matSome(pos => {
 				if (this.checkCanMove(piecePos, pos, false, false, true).type === "ok") {
 					const shogi: Shogi = deepCopy(this)
-					shogi.move(piecePos, pos, false)
+					shogi.move(piecePos, pos, false, false, true)
 					return !Shogi.checkNeglectKing(shogi, opponent)
 				}
 				return false
@@ -435,7 +437,8 @@ export class Shogi {
 			})
 		})
 
-		return canAvoidCheckMateByMove || canAvoidCheckMateByPut
+		this.avoidLoopOfCheckCheckMate = false
+		return !canAvoidCheckMateByMove && !canAvoidCheckMateByPut
 	}
 
 	/** 反則チェック */
@@ -461,7 +464,8 @@ export class Shogi {
 		)
 
 		if (kingPosition === null) {
-			throw new ShogiError("王将がいません")
+			// 既に王が取られているのでスキップ
+			return false
 		}
 
 		// 相手の駒に王将に届く駒があるか判定
