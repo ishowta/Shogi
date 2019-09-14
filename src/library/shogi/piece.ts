@@ -3,7 +3,6 @@ import { Player } from "./player"
 import { Point } from "./util"
 
 /** 駒の種類 */
-/** 駒の種類 */
 export enum PieceType {
     /** 王将 */
     King =  "king",
@@ -23,26 +22,23 @@ export enum PieceType {
     Pawn= "pawn",
 }
 
-/** 駒を管理するクラス */
-export class Piece {
-    /** 成れる種類の駒か */
-    public static canPromote(type: PieceType): boolean {
-        switch (type) {
-            case PieceType.King: return false
-            case PieceType.Rook: return true
-            case PieceType.Bishop: return true
-            case PieceType.GoldGeneral: return false
-            case PieceType.SilverGeneral: return true
-            case PieceType.Knight: return true
-            case PieceType.Lance: return true
-            case PieceType.Pawn: return true
-        }
-    }
+/** 駒の動ける方向と回数 */
+export type Dir = {
+    /** 駒の動ける場所 dP/dt */
+    dif: Point,
 
+    /** 駒の動ける回数 t */
+    times: integer
+}
+
+/** 駒 */
+export class Piece {
     /** 駒の種類（成っているかは含めない） */
     public readonly type: PieceType
+
     /** 駒の所持プレイヤー */
     public owner: Player
+
     /** 成っているか */
     public isPromote: boolean
 
@@ -54,7 +50,7 @@ export class Piece {
 
     /** 駒から見た盤面の位置（白番の場合反転する） */
     public look(p: Point): Point {
-        return this.owner === Player.Black ? p : { x: Board.width - 1 - p.x, y: Board.height - 1 - p.y }
+        return {x: this.lookX(p.x), y: this.lookY(p.y)}
     }
 
     /** 駒から見た盤面の位置X（白番の場合反転する） */
@@ -88,110 +84,118 @@ export class Piece {
                 return this.isPromote ? "金" : "銀"
         }
     }
-}
 
-const MovedirMatrix: {[key in PieceType]: [integer[][], integer[][]]} = {
-    [PieceType.Pawn] : [[
-        [0, 1, 0],
-        [0, 0, 0],
-        [0, 0, 0],
-    ], [
-        [1, 1, 1],
-        [1, 0, 1],
-        [0, 1, 0],
-    ], ],
-    [PieceType.Lance] : [[
-        [0, Infinity, 0],
-        [0, 0, 0],
-        [0, 0, 0],
-    ], [
-        [1, 1, 1],
-        [1, 0, 1],
-        [0, 1, 0],
-    ], ],
-    [PieceType.Knight] : [[
-        [0, 1, 0, 1, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 1, 0, 1, 0],
-    ], [
-        [1, 1, 1],
-        [1, 0, 1],
-        [0, 1, 0],
-    ], ],
-    [PieceType.SilverGeneral] : [[
-        [1, 1, 1],
-        [0, 0, 0],
-        [1, 0, 1],
-    ], [
-        [1, 1, 1],
-        [1, 0, 1],
-        [0, 1, 0],
-    ], ],
-    [PieceType.GoldGeneral] : [[
-        [1, 1, 1],
-        [1, 0, 1],
-        [0, 1, 0],
-    ], [], ],
-    [PieceType.Rook] : [[
-        [0       , Infinity, 0       ],
-        [Infinity, 0       , Infinity],
-        [0       , Infinity, 0       ],
-    ], [
-        [1       , Infinity, 1       ],
-        [Infinity, 0       , Infinity],
-        [1       , Infinity, 1       ],
-    ], ],
-    [PieceType.Bishop] : [[
-        [Infinity, 0       , Infinity],
-        [0       , 0       , 0       ],
-        [Infinity, 0       , Infinity],
-    ], [
-        [Infinity, 1       , Infinity],
-        [1       , 0       , 1       ],
-        [Infinity, 1       , Infinity],
-    ], ],
-    [PieceType.King] : [[
-        [1, 1, 1],
-        [1, 0, 1],
-        [1, 1, 1],
-    ], [], ],
-}
-
-/** 駒の動ける方向と回数 */
-export type Dir = {
-    /** 駒の動ける向き */
-    d: Point,
-
-    /** 駒の動ける回数 */
-    times: integer
-}
-
-/**
- * 駒の動かせる方向
- *
- * 数値は何回動かせるかを示す
- */
-export const PieceMovableDir: {[pieceTypeKey in PieceType]: {[isPromotedKey in  "normal" | "promoted"]: Dir[]}} =
-(() => {
-    const dirDict: {[pieceTypeKey in string]: {[isPromotedKey in  "normal" | "promoted"]: Dir[]}} = {}
-    for (const [type, mats] of Object.entries(MovedirMatrix)) {
-        const makeDirPositionList = (mat: integer[][]): Dir[] => {
-            if (mat.length === 0) {
-                return []
-            }
-            const offsetY: integer = Math.floor(mat.length / 2)
-            const offsetX: integer = offsetY
-            return mat.map((line, y) =>
-                line.map((times, x) => ({d: {x: x - offsetX, y: y - offsetY}, times})).filter(dir => dir.times !== 0)
-            ).flat()
-        }
-
-        dirDict[type as PieceType] = {
-            normal: makeDirPositionList(mats[0]),
-            promoted: makeDirPositionList(mats[1]),
+    /** 成れる種類の駒か */
+    public static canPromote(type: PieceType): boolean {
+        switch (type) {
+            case PieceType.King: return false
+            case PieceType.Rook: return true
+            case PieceType.Bishop: return true
+            case PieceType.GoldGeneral: return false
+            case PieceType.SilverGeneral: return true
+            case PieceType.Knight: return true
+            case PieceType.Lance: return true
+            case PieceType.Pawn: return true
         }
     }
-    return dirDict as  {[pieceTypeKey in PieceType]: {[isPromotedKey in  "normal" | "promoted"]: Dir[]}}
-})()
+
+    /** 動ける場所と回数の表 */
+    private static MovedirMatrix: {[key in PieceType]: [integer[][], integer[][]]} = {
+        [PieceType.Pawn] : [[
+            [0, 1, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ], [
+            [1, 1, 1],
+            [1, 0, 1],
+            [0, 1, 0],
+        ], ],
+        [PieceType.Lance] : [[
+            [0, Infinity, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ], [
+            [1, 1, 1],
+            [1, 0, 1],
+            [0, 1, 0],
+        ], ],
+        [PieceType.Knight] : [[
+            [0, 1, 0, 1, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 1, 0, 1, 0],
+        ], [
+            [1, 1, 1],
+            [1, 0, 1],
+            [0, 1, 0],
+        ], ],
+        [PieceType.SilverGeneral] : [[
+            [1, 1, 1],
+            [0, 0, 0],
+            [1, 0, 1],
+        ], [
+            [1, 1, 1],
+            [1, 0, 1],
+            [0, 1, 0],
+        ], ],
+        [PieceType.GoldGeneral] : [[
+            [1, 1, 1],
+            [1, 0, 1],
+            [0, 1, 0],
+        ], [], ],
+        [PieceType.Rook] : [[
+            [0       , Infinity, 0       ],
+            [Infinity, 0       , Infinity],
+            [0       , Infinity, 0       ],
+        ], [
+            [1       , Infinity, 1       ],
+            [Infinity, 0       , Infinity],
+            [1       , Infinity, 1       ],
+        ], ],
+        [PieceType.Bishop] : [[
+            [Infinity, 0       , Infinity],
+            [0       , 0       , 0       ],
+            [Infinity, 0       , Infinity],
+        ], [
+            [Infinity, 1       , Infinity],
+            [1       , 0       , 1       ],
+            [Infinity, 1       , Infinity],
+        ], ],
+        [PieceType.King] : [[
+            [1, 1, 1],
+            [1, 0, 1],
+            [1, 1, 1],
+        ], [], ],
+    }
+
+    /**
+     * 駒の動かせる方向と回数のリスト
+     *
+     * 数値は何回動かせるかを示す
+     */
+    public static MovableDir: {[pieceTypeKey in PieceType]: {[isPromotedKey in  "normal" | "promoted"]: Dir[]}} =
+    (() => {
+        const dirDict: {[pieceTypeKey in string]: {[isPromotedKey in  "normal" | "promoted"]: Dir[]}} = {}
+        for (const [type, mats] of Object.entries(Piece.MovedirMatrix)) {
+            const makeDirPositionList = (mat: integer[][]): Dir[] => {
+                if (mat.length === 0) {
+                    return []
+                }
+                const offsetY: integer = Math.floor(mat.length / 2)
+                const offsetX: integer = offsetY
+                return mat.map((line, y) =>
+                    line.map((times, x) => (
+                        {dif: {x: x - offsetX, y: y - offsetY}, times}
+                    )).filter(dir => dir.times !== 0)
+                ).flat()
+            }
+
+            dirDict[type as PieceType] = {
+                normal: makeDirPositionList(mats[0]),
+                promoted: makeDirPositionList(mats[1]),
+            }
+        }
+        return dirDict as  {[pieceTypeKey in PieceType]: {[isPromotedKey in  "normal" | "promoted"]: Dir[]}}
+    })()
+}

@@ -1,7 +1,7 @@
 import { BitBoard, Board, PieceBoard } from "./board"
 // tslint:disable-next-line:max-line-length
 import { BoundError, CantMoveError, CantPromoteError, DoublePawnFoul, DuplicateError, FoulError, MoveError, NeglectKingFoul , NoPieceError, NotOwnedPieceError, ShogiError, StrikingFoul, ThousandDaysFoul } from "./errors"
-import { Piece, PieceType, PieceMovableDir, Dir } from "./piece"
+import { Piece, PieceType, Dir } from "./piece"
 import { Player } from "./player"
 import { deepCopy, isSameInstance, Point, add, equal } from "./util"
 
@@ -13,7 +13,7 @@ export type Ok = {
 
 /** 駒を動かせない */
 export type MoveNotAllowedError = {
-    /** 駒を置けない理由 */
+    /** 駒を動かせない理由 */
     readonly reason: NoPieceError | NotOwnedPieceError | CantMoveError | CantPromoteError | NeglectKingFoul
     /** type */
     readonly type: "move_error"
@@ -176,13 +176,13 @@ export class Shogi {
 
         const _isRestrictionPieceConstraits = (pos: Point) => {
             const dirList: Dir[] = piece.isPromote ?
-                PieceMovableDir[piece.type].promoted :
-                PieceMovableDir[piece.type].normal
+                Piece.MovableDir[piece.type].promoted :
+                Piece.MovableDir[piece.type].normal
             for (const dir of dirList) {
                 let currentPos: Point = pos
                 let count: integer = 0
                 while (count < dir.times) {
-                    currentPos = add(currentPos, dir.d)
+                    currentPos = add(currentPos, dir.dif)
                     if (!Board.inBound(currentPos)) {break}
                     board.assign(currentPos, true)
                     count += 1
@@ -447,13 +447,13 @@ export class Shogi {
 
         const _isCollideWithOtherPieces = (from: Point, to: Point): boolean => {
             const dirList: Dir[] = piece.isPromote ?
-                PieceMovableDir[piece.type].promoted :
-                PieceMovableDir[piece.type].normal
+                Piece.MovableDir[piece.type].promoted :
+                Piece.MovableDir[piece.type].normal
             // ∃dir ∈ Dir, ∃n ∈ N, from + n * dir.d = to
             const usedDir: Dir = dirList.find(dir => {
                 const isNatural = (x: number) => Number.isInteger(x) && Math.sign(x) === 1
-                const nx: number = (to.x - from.x) / (dir.d.x)
-                const ny: number = (to.y - from.y) / (dir.d.y)
+                const nx: number = (to.x - from.x) / (dir.dif.x)
+                const ny: number = (to.y - from.y) / (dir.dif.y)
                 return (nx === ny && isNatural(nx))
                         || (Number.isNaN(nx) && isNatural(ny))
                         || (Number.isNaN(ny) && isNatural(nx))
@@ -461,7 +461,7 @@ export class Shogi {
             let currentPos: Point = from
             let count: integer = 1
             while (count < usedDir.times) {
-                currentPos = add(currentPos, usedDir.d)
+                currentPos = add(currentPos, usedDir.dif)
                 if (equal(currentPos, to)) {return false}
                 if (this.board.at(currentPos) !== null) {
                     return true

@@ -6,6 +6,7 @@ import { deepCopy, Point, range, irange } from "./util"
 export class Board<T> extends Array<T[]> {
     /** 高さ（上下の長さ） */
     public static readonly height: integer = 9
+
     /** 幅（左右の長さ） */
     public static readonly width: integer = 9
 
@@ -160,7 +161,7 @@ export class PieceBoard extends Board<Piece | null> {
         return pieceBoard
     }
 
-    /** 将棋盤をnullで初期化 */
+    /** 将棋盤を初期化 */
     public static make(): PieceBoard {
             const place = (board: PieceBoard, player: Player): void => {
                 board[8][0] = new Piece(PieceType.Lance, player)
