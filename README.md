@@ -6,14 +6,12 @@
 
 ## Install/Update dependencies
 
-sever: `yarn`
-
-client: `cd src/server && yarn`
+`yarn`
 
 ## Run
 
-server: `cd src/server && yarn run start`
+server: `yarn run server`
 
-client: `yarn run dev`
+client: `yarn run client`
 
 ２画面デバッグ: [http://localhost:8080/debug.html](http://localhost:8080/debug.html)
