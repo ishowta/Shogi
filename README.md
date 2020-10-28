@@ -1,4 +1,6 @@
-# Shogiverse
+# Shogi
+
+Web online shogi sample
 
 ## Require
 
